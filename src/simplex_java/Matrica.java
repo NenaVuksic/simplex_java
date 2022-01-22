@@ -1,0 +1,336 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package simplex_java;
+import java.io.*;
+import java.util.*;
+
+/**
+ *
+ * @author Mirna
+ * 
+ */
+
+public class Matrica {
+    protected int m;        //broj redaka matrice A
+    protected int n;        //broj stupaca matrice A
+    protected ArrayList<ArrayList<Double>> matrica;     //prvi redak i prvi stupac su varijable (od 1 do n+m); zadnji redak i zadnji stupac su vektori z i b - dakle matrica je dimenzija (m+2)*(n+2)
+    public ArrayList<ArrayList<ArrayList<Double>>> povijestMatrice = new ArrayList<>();
+    
+    public Matrica(ArrayList<ArrayList<Double>> A, ArrayList<Double> b, ArrayList<Double> z) {   //pravim simplex tablicu za zadani problem z^T * x -> max, Ax <= b
+        matrica = new ArrayList<>();
+        m = A.size();
+        n = A.get(0).size();
+        
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                A.get(i).set(j, -1 * A.get(i).get(j));
+            }
+        }
+        
+        ArrayList<Double> noviRedak = new ArrayList<>();
+        
+        noviRedak.add(Double.NaN);      //u gornjem lijevom cosku nema broja
+        int temp;
+        for(temp = 1; temp < n + 1; temp++) noviRedak.add((double) temp);     //prvi redak je sacinjen od indekasa varijabli
+        noviRedak.add(Double.NaN);      //u gornjem desnom cosku nema broja
+        matrica.add(noviRedak);
+        
+        int temp2 = 0;
+        for(var i : A) {
+            noviRedak = new ArrayList<>();      //srednji dio simplex tablce je sačinjen od: 
+            noviRedak.add((double) temp++);     //indeksa varijable,
+            noviRedak.addAll(i);                //(negativnih) elemenata od A,
+            noviRedak.add(b.get(temp2++));      //i elementa od b
+            matrica.add(noviRedak);
+        }
+        
+        noviRedak = new ArrayList<>();
+        noviRedak.add(Double.NaN);
+        noviRedak.addAll(z);
+        noviRedak.add(Double.NaN);
+        matrica.add(noviRedak);
+        
+        povijestMatrice.add(matrica);
+    }
+    
+    public void GJT(int redak, int stupac){         //transformacija na mjestu(redak, stupac) u matrici
+        double elem = matrica.get(redak).get(stupac);       //kljucni element
+        ArrayList<ArrayList<Double>> novaMatrica = new ArrayList<>();        
+        ArrayList<Double> noviRedak = new ArrayList<>();
+        
+        noviRedak.addAll(matrica.get(0));                   //kreiram prvi redak mtrice, koji se sastoji od indekasa varijabli
+        noviRedak.set(stupac, matrica.get(redak).get(0));
+        novaMatrica.add(noviRedak);
+        
+        int r = 0;
+        for(var i : matrica) {                              //ovdje preskacem prvi redak jer u njemu nemam sta racunat
+            if(r == 0) {
+                r++;
+                continue;
+            }
+            noviRedak = new ArrayList<>();
+            if(r == redak) noviRedak.add(matrica.get(0).get(stupac));//u kljucnom retku na nultom mjestu je indeks varijable koja je prije bila u bazi
+            else noviRedak.add(i.get(0));                            //inače samo prepišemo broj varijable od prije
+            int s = 0;
+            for(var j : i) {
+                if(s == 0) {
+                    s++;
+                    continue;
+                }
+                if(r == redak) {
+                    if(s == stupac){
+                        noviRedak.add(1 / elem);
+                    }
+                    else {
+                        System.out.println("dodajem "+ -j/elem);
+                        noviRedak.add(- j / elem);
+                    }
+                }
+                else {
+                    if(r == m + 1 && s == n + 1) {
+                        noviRedak.add(Double.NaN);      //ovdje treba dodati vrijednost funkcije cilja!
+                        break;
+                    }
+                    if(s == stupac) {
+                        noviRedak.add(j / elem);
+                    }
+                    else {
+                        noviRedak.add((j * elem - i.get(stupac) * matrica.get(redak).get(s)) / elem);
+                        System.out.println("dodajem " + (j * elem - i.get(stupac) * matrica.get(redak).get(s)) / elem);
+                    }
+                }
+                s++;
+            }
+            novaMatrica.add(noviRedak);
+            r++;
+        }
+        
+        matrica = novaMatrica;
+    }
+    
+    public void optimalniPlan()
+	{ 
+            int stupac, redak=0;
+            double pom, pom_min;
+            boolean br;
+            while(true)
+            {
+		pom = -1.0;
+		br = true;
+		for(int i = 1; i < n+2; i++) //Provjerava je li matrica vec u optimalnom stanju i trazi najmanji index koji zadovoljava uvjet
+		{
+			if(matrica.get(n+1).get(i) > 0)
+                        {
+                            br = false;
+                     	    if(matrica.get(0).get(i) < pom)
+                                pom = matrica.get(0).get(i);
+                        }
+		 }
+			
+		 if(br)
+		 {
+                        System.out.println("Optimalna tablica");
+                        return ;
+		 }
+		 stupac = matrica.get(0).indexOf(pom);
+		 pom = -1.0;
+		 pom_min = Double.MAX_VALUE;
+		 br = true;
+		 for(int i = 1; i < m+2 ; i++) //Provjerava je li funkcija cilja neogranicena i trazi najmanji index koji zadovoljava uvjet
+		 {
+                        if(matrica.get(i).get(stupac) < 0)
+                        {
+                            br = false;
+			    if((-matrica.get(i).get(n+1)/matrica.get(i).get(stupac) < pom_min) || (-matrica.get(i).get(n+1)/matrica.get(i).get(stupac) == pom_min && matrica.get(i).get(0) < pom))
+			    {
+                                pom_min = -matrica.get(i).get(n+1)/matrica.get(i).get(stupac);
+                                pom = matrica.get(i).get(0);
+                                redak = i;
+			    }
+                        }
+		  }
+		  if(br)
+		  {
+                        System.out.println("Neogranicena funkcija cilja");
+                        return ;
+		  }
+		  GJT(redak, stupac);
+		  povijestMatrice.add(matrica);
+        }
+    	//return ;
+    }    
+	
+    public void prviPlan() {
+        int flag = 0, r = 0, temp = 0;
+        for(var i : matrica) {
+            if(temp > 0 && temp < m + 1 && i.get(n + 1) < 0) {
+                r = temp;
+                flag = 1;
+                break;
+            }
+            temp++;
+        }
+        
+        if(flag == 0) optimalniPlan();
+        else {
+            flag = 0;
+            int s = 0;
+            temp = 0;
+            for(var i : matrica.get(r)) {
+                if(i > 0 && temp > 0 && temp < n + 1) {
+                    //s = matrica.get(r).indexOf(i);
+                    s = temp;
+                    flag = 1;
+                    break;
+                }
+                temp++;
+            }
+            if(flag == 0) System.out.println("kontradikcija");
+            else {
+                GJT(r, s);
+                povijestMatrice.add(matrica);
+                prviPlan();
+            }
+        }  
+        
+    }
+    
+    //za provjeru lin. nezavisnosti - Gaussove eliminacije
+    public boolean Gauss(ArrayList<ArrayList<Double>> mat){
+        int r = mat.size(), r1 = 0;
+        int i, j, k;
+        double p, p1;
+        ArrayList<Double> d1 = new ArrayList<Double>();
+        ArrayList<Double> d2 = new ArrayList<Double>();
+        for(i = 0; i < r-1; i++){
+            p = mat.get(i).get(i+1);
+            j = i+1;
+            while(p == 0.0 && j < r){
+                Collections.swap(mat, i, j);
+                p = mat.get(i).get(i+1);
+                j++;
+            }
+            for(j = i+1; j < r; j++){
+                p1 = mat.get(j).get(i+1);
+                if(p1 != 0.0){
+                    d1 = mat.get(i);
+                    d2 = mat.get(j);
+                    for(k = i+1; k < mat.get(0).size(); k++){
+                        d2.set(k, d2.get(k)-(d1.get(k)/p)*p1);
+                    }
+                    mat.set(j, d2);
+                }
+            }
+        }
+        r1=r;
+        for(i = 1; i < r; i++){
+            j = Collections.frequency(mat.get(i).subList(1,mat.get(i).size()-1), 0.0);
+            if(j == mat.get(i).size()-2) r1--;
+        }
+        return r == r1;
+    }
+    
+    //copy matrice
+    public ArrayList<ArrayList<Double>> copyM(List<ArrayList<Double>> mat){
+        ArrayList<ArrayList<Double>> mat1 = new ArrayList<ArrayList<Double>>();
+        for(int i = 0; i < mat.size(); i++){
+            mat1.add(new ArrayList<Double>(mat.get(i)));
+        }
+        return mat1;
+    }
+    
+    public ArrayList<Double> razdvajajucaHiperravnina() {
+        ArrayList<Double> v = new ArrayList<Double>(m);
+        int i, j, k;
+        boolean ok = true;
+        if(m < n){
+            System.out.println("m < n!");
+            return v;
+        }
+        
+        ArrayList<Integer> ind = new ArrayList<Integer>(n);
+        for(i = 1; i < n+1; i++)
+            ind.add(i);
+        
+        ArrayList<ArrayList<Double>> mat1 = copyM(matrica.subList(1,n+1));
+        if(!Gauss(mat1)){
+            ok = false;
+            for(j = n; j > 0; j--){
+                ind.remove(j-1);
+                for(i = n+1; i < m+1; i++){
+                    mat1 = copyM(matrica.subList(1,j));
+                    ArrayList<ArrayList<Double>> mat2 = copyM(matrica.subList(j+1,n+1));
+                    mat1.addAll(mat2);
+                    ArrayList<Double> v1 = new ArrayList<Double>(matrica.get(i));
+                    mat1.add(v1);
+                    if(Gauss(mat1)){
+                        ok = true;
+                        ind.add(i);
+                        break;
+                    }
+                }
+                if(ok) break;
+                ind.add(j);
+            }
+            if(!ok){
+                System.out.println("Linearna zavisnost!");
+                return v;
+            }
+        }
+        
+        ArrayList<Integer> ind2 = new ArrayList<Integer>();
+        for(i = 1; i < n+1; i++){
+            for(j = 0; j < ind.size(); j++){
+                if(matrica.get(ind.get(j)).get(i) != 0.0)
+                    break;}
+            GJT(ind.get(j),i);
+            ind2.add(ind.get(j));
+            ind.remove(j);
+            povijestMatrice.add(matrica);
+        }
+        for(i = 1; i < n+1; i++){
+            Collections.swap(matrica, ind2.get(i-1), i);
+        }
+        
+        while(ok){
+            int stop = 0;
+            int l = -1;
+            for(i = 1; i < n+1; i++)
+                if(matrica.get(m+1).get(i) < 0){
+                    stop = 1;
+                    l = i;
+                    break;
+                }
+            if(stop == 0){
+                System.out.println("Vektor pripada hiperravnini.");
+                break;
+            }
+            
+            // l vec imamo
+            // stop = 1;
+            k = -1;
+            double minK = 0;
+            for(i = n+1; i < m+1; i++){
+                if(matrica.get(i).get(l) < 0){
+                    stop = 0;
+                    k = i;
+                    break;
+                }
+            }
+            if(stop == 1){
+                System.out.println("Vektor ne pripada hiperravnini.");
+                for(i = 1; i < n+1; i++)
+                    v.add(-matrica.get(i).get(l));
+                return v;
+            }
+            
+            // k vec imamo
+            GJT(k, l);
+            
+            povijestMatrice.add(matrica);
+        }
+        return v;
+    }
+}
