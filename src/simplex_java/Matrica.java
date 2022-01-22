@@ -7,8 +7,9 @@ import java.io.*;
 import java.util.*;
 
 /**
- *
- * @author Mirna
+ * Klasa <b>Matrica</b> reprezentira simplex tablicu kod rjesavanja zadaće linearnog programiranja i pronalaska vektora normale razdvajajuce hiperravnine. Simplex tablica sadrzavat ce bazne i pomocne varijable, informacije o dopustivom skupu tocaka te funkciju cilja i njenu vrijednost u danoj bazi.
+ * 
+ * @author Kristina M., Mirna I., Nena V.
  * 
  */
 
@@ -18,6 +19,12 @@ public class Matrica {
     protected ArrayList<ArrayList<Double>> matrica;     //prvi redak i prvi stupac su varijable (od 1 do n+m); zadnji redak i zadnji stupac su vektori z i b - dakle matrica je dimenzija (m+2)*(n+2)
     public ArrayList<ArrayList<ArrayList<Double>>> povijestMatrice = new ArrayList<>();
     
+    /**
+     * 
+     * @param A matrica dimenzija m*n koja definira skup dopustivih točaka x, sa Ax <= b
+     * @param b matrica dimenzija n*1 koja definira skup dopustivih točaka x, sa Ax <= b
+     * @param z matrica dimenzija 1*m koja reprezentira funkciju cilja
+     */
     public Matrica(ArrayList<ArrayList<Double>> A, ArrayList<Double> b, ArrayList<Double> z) {   //pravim simplex tablicu za zadani problem z^T * x -> max, Ax <= b
         matrica = new ArrayList<>();
         m = A.size();
@@ -55,6 +62,12 @@ public class Matrica {
         povijestMatrice.add(matrica);
     }
     
+    /**
+     * Ova metoda obavlja Gauss-Jordanovu transformaciju simplex tablice na danim koordinatama.
+     * 
+     * @param redak redni broj retka u kojem je ključni element transformacije
+     * @param stupac redni broj stupca u kojem je ključni element transformacije
+     */
     public void GJT(int redak, int stupac){         //transformacija na mjestu(redak, stupac) u matrici
         double elem = matrica.get(redak).get(stupac);       //kljucni element
         ArrayList<ArrayList<Double>> novaMatrica = new ArrayList<>();        
@@ -110,6 +123,9 @@ public class Matrica {
         matrica = novaMatrica;
     }
     
+    /**
+     * Implementacija algoritma za optimalni plan. Obavlja Gauss-Jordanove transformacije na simplex tablici dok ne nade tocku u kojoj se maksimizira funkcija cilja.
+     */
     public void optimalniPlan()
 	{ 
             int stupac, redak=0;
@@ -161,7 +177,10 @@ public class Matrica {
         }
     	//return ;
     }    
-	
+    
+    /**
+     * Implementacija algoritma za prvi plan. Obavlja Gauss-Jordanove transformacije nad simplex tablicom sve dok svi elementi stupca <b>b</b> ne postanu nenegativni.
+     */
     public void prviPlan() {
         int flag = 0, r = 0, temp = 0;
         for(var i : matrica) {
@@ -198,6 +217,11 @@ public class Matrica {
     }
     
     //za provjeru lin. nezavisnosti - Gaussove eliminacije
+    /**
+     * Provjera linearne nezavisnosti.
+     * @param mat simplex tablica (?)
+     * @return odgovor na pitanje jesu li retci dane matrice linearno nezavisni
+     */
     public boolean Gauss(ArrayList<ArrayList<Double>> mat){
         int r = mat.size(), r1 = 0;
         int i, j, k;
@@ -233,6 +257,11 @@ public class Matrica {
     }
     
     //copy matrice
+    /**
+     * 
+     * @param mat matrica koju kopiramo
+     * @return rezultat kopiranja dane matrice
+     */
     public ArrayList<ArrayList<Double>> copyM(List<ArrayList<Double>> mat){
         ArrayList<ArrayList<Double>> mat1 = new ArrayList<ArrayList<Double>>();
         for(int i = 0; i < mat.size(); i++){
@@ -241,6 +270,10 @@ public class Matrica {
         return mat1;
     }
     
+    /**
+     * Implementacija algoritma za razdvajajuću hiperravninu. Ako vektor <b>b</b> pripada konusnoj ljusci zadanih m vektora, vraca se prazan vektor. U suprotnom se vraca vektor normale hiperravnine koja razdvaja spomenuti konus od <b>b</b>.
+     * @return vektor normale razdvajajuce hiperravnine, ako postoji
+     */
     public ArrayList<Double> razdvajajucaHiperravnina() {
         ArrayList<Double> v = new ArrayList<Double>(m);
         int i, j, k;
