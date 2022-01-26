@@ -68,7 +68,7 @@ public class Matrica {
      * @param redak redni broj retka u kojem je ključni element transformacije
      * @param stupac redni broj stupca u kojem je ključni element transformacije
      */
-    public void GJT(int redak, int stupac){         //transformacija na mjestu(redak, stupac) u matrici
+    public void GJT1(int redak, int stupac){         //transformacija na mjestu(redak, stupac) u matrici
         double elem = matrica.get(redak).get(stupac);       //kljucni element
         ArrayList<ArrayList<Double>> novaMatrica = new ArrayList<>();        
         ArrayList<Double> noviRedak = new ArrayList<>();
@@ -122,6 +122,8 @@ public class Matrica {
         
         matrica = novaMatrica;
     }
+	
+    public native public native ArrayList<ArrayList<Double>> GJT(ArrayList<ArrayList<Double>> mat, int redak, int stupac);
     
     /**
      * Implementacija algoritma za optimalni plan. Obavlja Gauss-Jordanove transformacije na simplex tablici dok ne nade tocku u kojoj se maksimizira funkcija cilja.
@@ -172,7 +174,8 @@ public class Matrica {
                         System.out.println("Neogranicena funkcija cilja");
                         return ;
 		  }
-		  GJT(redak, stupac);
+		  GJT1(redak, stupac);
+		  //matrica = GJT(matrica, redak, stupac);
 		  povijestMatrice.add(matrica);
         }
     	//return ;
@@ -208,7 +211,8 @@ public class Matrica {
             }
             if(flag == 0) System.out.println("kontradikcija");
             else {
-                GJT(r, s);
+                GJT1(r, s);
+		//matrica = GJT(matrica, r, s);
                 povijestMatrice.add(matrica);
                 prviPlan();
             }
@@ -318,7 +322,8 @@ public class Matrica {
             for(j = 0; j < ind.size(); j++){
                 if(matrica.get(ind.get(j)).get(i) != 0.0)
                     break;}
-            GJT(ind.get(j),i);
+            GJT1(ind.get(j),i);
+	    //matrica = GJT(matrica, ind.get(j), i);
             ind2.add(ind.get(j));
             ind.remove(j);
             povijestMatrice.add(matrica);
@@ -360,8 +365,8 @@ public class Matrica {
             }
             
             // k vec imamo
-            GJT(k, l);
-            
+            GJT1(k, l);
+            //matrica = GJT(matrica, k, l);
             povijestMatrice.add(matrica);
         }
         return v;
