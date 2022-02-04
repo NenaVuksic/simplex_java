@@ -174,9 +174,10 @@ public class Matrica {
                         System.out.println("Neogranicena funkcija cilja");
                         return ;
 		  }
-		  GJT1(redak, stupac);
-		  //matrica = GJT(matrica, redak, stupac);
-		  povijestMatrice.add(matrica);
+		  //GJT1(redak, stupac);
+		  final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, redak, stupac);
+		  povijestMatrice.add(matrica1);
+		  matrica = copyM(matrica1);
         }
     	//return ;
     }    
@@ -211,9 +212,10 @@ public class Matrica {
             }
             if(flag == 0) System.out.println("kontradikcija");
             else {
-                GJT1(r, s);
-		//matrica = GJT(matrica, r, s);
-                povijestMatrice.add(matrica);
+                //GJT1(r, s);
+		final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, r, s);
+                povijestMatrice.add(matrica1);
+		matrica = copyM(matrica1);
                 prviPlan();
             }
         }  
@@ -322,11 +324,12 @@ public class Matrica {
             for(j = 0; j < ind.size(); j++){
                 if(matrica.get(ind.get(j)).get(i) != 0.0)
                     break;}
-            GJT1(ind.get(j),i);
-	    //matrica = GJT(matrica, ind.get(j), i);
+            //GJT1(ind.get(j),i);
+	    final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, ind.get(j), i);
             ind2.add(ind.get(j));
             ind.remove(j);
-            povijestMatrice.add(matrica);
+            povijestMatrice.add(matrica1);
+	    matrica = copyM(matrica1);
         }
         for(i = 1; i < n+1; i++){
             Collections.swap(matrica, ind2.get(i-1), i);
@@ -365,9 +368,10 @@ public class Matrica {
             }
             
             // k vec imamo
-            GJT1(k, l);
-            //matrica = GJT(matrica, k, l);
-            povijestMatrice.add(matrica);
+            //GJT1(k, l);
+            final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, k, l);
+            povijestMatrice.add(matrica1);
+	    matrica = copyM(matrica1);
         }
         return v;
     }
