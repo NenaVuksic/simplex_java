@@ -17,18 +17,21 @@ public class Matrica {
     protected int m;        //broj redaka matrice A
     protected int n;        //broj stupaca matrice A
     protected ArrayList<ArrayList<Double>> matrica;     //prvi redak i prvi stupac su varijable (od 1 do n+m); zadnji redak i zadnji stupac su vektori z i b - dakle matrica je dimenzija (m+2)*(n+2)
+    protected ArrayList<Double> z;                      //za računanje vrijednsoti fje cilja trebat će nam originalna funkcija cilja
     public ArrayList<ArrayList<ArrayList<Double>>> povijestMatrice = new ArrayList<>();
     
     /**
      * 
      * @param A matrica dimenzija m*n koja definira skup dopustivih točaka x, sa Ax <= b
      * @param b matrica dimenzija n*1 koja definira skup dopustivih točaka x, sa Ax <= b
-     * @param z matrica dimenzija 1*m koja reprezentira funkciju cilja
+     * @param _z matrica dimenzija 1*m koja reprezentira funkciju cilja
      */
-    public Matrica(ArrayList<ArrayList<Double>> A, ArrayList<Double> b, ArrayList<Double> z) {   //pravim simplex tablicu za zadani problem z^T * x -> max, Ax <= b
+    public Matrica(ArrayList<ArrayList<Double>> A, ArrayList<Double> b, ArrayList<Double> _z) {   //pravim simplex tablicu za zadani problem z^T * x -> max, Ax <= b
         matrica = new ArrayList<>();
         m = A.size();
         n = A.get(0).size();
+        
+        z = _z;
         
         for(int i = 0; i < m; i++) {
             for(int j = 0; j < n; j++) {
@@ -55,11 +58,27 @@ public class Matrica {
         
         noviRedak = new ArrayList<>();
         noviRedak.add(Double.NaN);
-        noviRedak.addAll(z);
+        noviRedak.addAll(_z);
         noviRedak.add(Double.NaN);
         matrica.add(noviRedak);
         
         povijestMatrice.add(matrica);
+    }
+    
+    /**
+     * Računa vrijednost funkcije cilja u trenutnoj tablici.
+     * 
+     * @return vrijednost funkcije cilja 
+     */
+    public double vrijednostFunkcijeCilja() {
+        double rez = 0.0;
+        for(var i : matrica) {
+            double indeks = i.get(0);       //gledam indekse koji se nalaze u nultom stupcu
+            if(indeks <= n) {               //ako su indeksi <=n, znači da su to varijable koje su ranije bile u prvom retku pa 
+                rez += i.get(n + 1) * z.get((int) indeks);   //evaluiramo fju cilja u toj točki
+            }
+        }
+        return rez;
     }
     
     /**
@@ -97,13 +116,13 @@ public class Matrica {
                         noviRedak.add(1 / elem);
                     }
                     else {
-                        System.out.println("dodajem "+ -j/elem);
+                        //System.out.println("dodajem "+ -j/elem);
                         noviRedak.add(- j / elem);
                     }
                 }
                 else {
                     if(r == m + 1 && s == n + 1) {
-                        noviRedak.add(Double.NaN);      //ovdje treba dodati vrijednost funkcije cilja!
+                        noviRedak.add(vrijednostFunkcijeCilja());      //ovdje treba dodati vrijednost funkcije cilja!
                         break;
                     }
                     if(s == stupac) {
@@ -111,7 +130,7 @@ public class Matrica {
                     }
                     else {
                         noviRedak.add((j * elem - i.get(stupac) * matrica.get(redak).get(s)) / elem);
-                        System.out.println("dodajem " + (j * elem - i.get(stupac) * matrica.get(redak).get(s)) / elem);
+                        //System.out.println("dodajem " + (j * elem - i.get(stupac) * matrica.get(redak).get(s)) / elem);
                     }
                 }
                 s++;
@@ -123,14 +142,14 @@ public class Matrica {
         matrica = novaMatrica;
     }
 	
-    public native public native ArrayList<ArrayList<Double>> GJT(ArrayList<ArrayList<Double>> mat, int redak, int stupac);
+    public native ArrayList<ArrayList<Double>> GJT(ArrayList<ArrayList<Double>> mat, int redak, int stupac);
     
     /**
      * Implementacija algoritma za optimalni plan. Obavlja Gauss-Jordanove transformacije na simplex tablici dok ne nade tocku u kojoj se maksimizira funkcija cilja.
      */
     public void optimalniPlan()
 	{ 
-            int stupac, redak=0;
+            int stupac=0, redak=0;
             double pom, pom_min;
             boolean br;
             while(true)
@@ -139,11 +158,13 @@ public class Matrica {
 		br = true;
 		for(int i = 1; i < n+2; i++) //Provjerava je li matrica vec u optimalnom stanju i trazi najmanji index koji zadovoljava uvjet
 		{
-			if(matrica.get(n+1).get(i) > 0)
+			if(matrica.get(m + 1).get(i) > 0)
                         {
                             br = false;
-                     	    if(matrica.get(0).get(i) < pom)
-                                pom = matrica.get(0).get(i);
+                     	    if(matrica.get(0).get(i) > pom){
+                                pom = matrica.get(0).get(i);       
+                                stupac = i;
+                            }
                         }
 		 }
 			
@@ -157,7 +178,8 @@ public class Matrica {
 		 pom_min = Double.MAX_VALUE;
 		 br = true;
 		 for(int i = 1; i < m+2 ; i++) //Provjerava je li funkcija cilja neogranicena i trazi najmanji index koji zadovoljava uvjet
-		 {
+		 {      
+                        System.out.println("pokušavam vidjet element na mjestu " + i + ", " + stupac);
                         if(matrica.get(i).get(stupac) < 0)
                         {
                             br = false;
@@ -174,7 +196,8 @@ public class Matrica {
                         System.out.println("Neogranicena funkcija cilja");
                         return ;
 		  }
-		  //GJT1(redak, stupac);
+//		  GJT1(redak, stupac);
+//                  povijestMatrice.add(matrica);
 		  final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, redak, stupac);
 		  povijestMatrice.add(matrica1);
 		  matrica = copyM(matrica1);
@@ -212,7 +235,8 @@ public class Matrica {
             }
             if(flag == 0) System.out.println("kontradikcija");
             else {
-                //GJT1(r, s);
+//                GJT1(r, s);
+//                povijestMatrice.add(matrica);
 		final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, r, s);
                 povijestMatrice.add(matrica1);
 		matrica = copyM(matrica1);
@@ -324,11 +348,11 @@ public class Matrica {
             for(j = 0; j < ind.size(); j++){
                 if(matrica.get(ind.get(j)).get(i) != 0.0)
                     break;}
-            //GJT1(ind.get(j),i);
+//            GJT1(ind.get(j),i);
 	    final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, ind.get(j), i);
             ind2.add(ind.get(j));
             ind.remove(j);
-            povijestMatrice.add(matrica1);
+//            povijestMatrice.add(matrica);
 	    matrica = copyM(matrica1);
         }
         for(i = 1; i < n+1; i++){
@@ -368,7 +392,8 @@ public class Matrica {
             }
             
             // k vec imamo
-            //GJT1(k, l);
+//            GJT1(k, l);
+//            povijestMatrice.add(matrica);
             final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, k, l);
             povijestMatrice.add(matrica1);
 	    matrica = copyM(matrica1);
