@@ -22,8 +22,8 @@ public class Matrica {
     
     /**
      * 
-     * @param A matrica dimenzija m*n koja definira skup dopustivih točaka x, sa Ax <= b
-     * @param b matrica dimenzija n*1 koja definira skup dopustivih točaka x, sa Ax <= b
+     * @param A matrica dimenzija m*n koja definira skup dopustivih točaka x, sa Ax &lt;= b
+     * @param b matrica dimenzija n*1 koja definira skup dopustivih točaka x, sa Ax &lt;= b
      * @param _z matrica dimenzija 1*m koja reprezentira funkciju cilja
      */
     public Matrica(ArrayList<ArrayList<Double>> A, ArrayList<Double> b, ArrayList<Double> _z) {   //pravim simplex tablicu za zadani problem z^T * x -> max, Ax <= b
@@ -196,11 +196,11 @@ public class Matrica {
                         System.out.println("Neogranicena funkcija cilja");
                         return ;
 		  }
-//		  GJT1(redak, stupac);
-//                  povijestMatrice.add(matrica);
-		  final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, redak, stupac);
-		  povijestMatrice.add(matrica1);
-		  matrica = copyM(matrica1);
+		  GJT1(redak, stupac);
+                  povijestMatrice.add(matrica);
+//		  final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, redak, stupac);
+//		  povijestMatrice.add(matrica1);
+//		  matrica = copyM(matrica1);
         }
     	//return ;
     }    
@@ -235,12 +235,12 @@ public class Matrica {
             }
             if(flag == 0) System.out.println("kontradikcija");
             else {
-//                GJT1(r, s);
-//                povijestMatrice.add(matrica);
-		final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, r, s);
-                povijestMatrice.add(matrica1);
-		matrica = copyM(matrica1);
-                prviPlan();
+                GJT1(r, s);
+                povijestMatrice.add(matrica);
+//		final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, r, s);
+//                povijestMatrice.add(matrica1);
+//		matrica = copyM(matrica1);
+//                prviPlan();
             }
         }  
         
@@ -348,12 +348,12 @@ public class Matrica {
             for(j = 0; j < ind.size(); j++){
                 if(matrica.get(ind.get(j)).get(i) != 0.0)
                     break;}
-//            GJT1(ind.get(j),i);
-	    final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, ind.get(j), i);
-            ind2.add(ind.get(j));
-            ind.remove(j);
-//            povijestMatrice.add(matrica);
-	    matrica = copyM(matrica1);
+            GJT1(ind.get(j),i);
+//	    final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, ind.get(j), i);
+//            ind2.add(ind.get(j));
+//            ind.remove(j);
+            povijestMatrice.add(matrica);
+//	    matrica = copyM(matrica1);
         }
         for(i = 1; i < n+1; i++){
             Collections.swap(matrica, ind2.get(i-1), i);
@@ -392,11 +392,11 @@ public class Matrica {
             }
             
             // k vec imamo
-//            GJT1(k, l);
-//            povijestMatrice.add(matrica);
-            final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, k, l);
-            povijestMatrice.add(matrica1);
-	    matrica = copyM(matrica1);
+            GJT1(k, l);
+            povijestMatrice.add(matrica);
+//            final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, k, l);
+//            povijestMatrice.add(matrica1);
+//	    matrica = copyM(matrica1);
         }
         return v;
     }

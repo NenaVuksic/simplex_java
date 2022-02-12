@@ -4,6 +4,9 @@
  */
 package simplex_java;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +14,7 @@ import java.util.ArrayList;
  * @author nena
  */
 public class Simplex_java {
-    static { System.loadLibrary("gjt"); }
+    //static { System.loadLibrary("gjt"); }
     /**
      * @param args the command line arguments
      */
@@ -65,13 +68,39 @@ public class Simplex_java {
         z.add(-12.0);
         
         Matrica simpleks = new Matrica(A, b, z);
-        simpleks.prviPlan();
+        //simpleks.prviPlan();
         
         for(var i : simpleks.povijestMatrice) {
             for(var j : i) {
                 System.out.println(j);
             }
             System.out.println("");
+        }
+        
+        ServerSocket server = null;
+        try {
+            server = new ServerSocket(6789);
+            server.setReuseAddress(true);
+            
+            while(true) {
+                Socket klijent = server.accept();
+                System.out.println("novi klijent: " + klijent.getInetAddress().getHostAddress());
+                Dretva novaDretva = new Dretva(klijent);
+                new Thread(novaDretva).start();
+            }
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if(server != null) {
+                try {
+                    server.close();
+                }
+                catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
