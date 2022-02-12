@@ -11,7 +11,8 @@ import java.util.ArrayList;
  * @author nena
  */
 public class Simplex_java {
-    static { System.loadLibrary("gjt"); }
+    static {System.loadLibrary("gjt");}
+
     /**
      * @param args the command line arguments
      */
