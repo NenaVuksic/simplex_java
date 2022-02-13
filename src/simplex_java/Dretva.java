@@ -114,8 +114,31 @@ public class Dretva implements Runnable {
                 }
                 
                 Matrica simpleks = new Matrica(A, b, z);
-                if(izbor == 1) simpleks.prviPlan();
-                else if (izbor == 2) simpleks.razdvajajucaHiperravnina();
+                if(izbor == 1) {
+                    simpleks.prviPlan();
+                    if(simpleks.zadacaUKontradikciji) zaPoslati.write("kontradikcija");
+                    else if(simpleks.neogranicenaFunkcijaCilja) zaPoslati.write("neogranicena fja");
+                    else {
+                        String temp = "";
+                        for(var i : simpleks.tocka) temp += i.toString() + " ";
+                        zaPoslati.write(temp);
+                        zaPoslati.write(simpleks.vrijednostFunkcijeCilja() + "");
+                    }
+                }
+                else if (izbor == 2) {
+                    ArrayList<Double> rez = simpleks.razdvajajucaHiperravnina();
+                    if(simpleks.nedobreDimenzije) zaPoslati.write("lose dimenzije");
+                    else if(simpleks.linearnaZavisnost) zaPoslati.write("lin zavisno");
+                    else if(simpleks.pripadaKonusu) zaPoslati.write("pripada konusu");
+                    else {
+                        String temp = "";
+                        for(var i : rez) temp += i.toString() + " ";
+                        zaPoslati.write(temp);
+                    }
+                }
+                
+                line = primljenoOdKlijenta.readLine();
+                if(line.equals("poslati korake")) posaljiKorake();
                 
                 break; //za svaki slucaj nek izade odmah nakon prve iteracije
             }
@@ -139,5 +162,7 @@ public class Dretva implements Runnable {
     
     private void posaljiKorake() {
         //ovdje cupamo linije iz baze i saljemo klijentu
+        
+        //pretpostavljam da ce prvo poslati broj tablica, a onda jednu po jednu tablicu
     }
 }

@@ -104,6 +104,8 @@ public class KlijentSwing extends javax.swing.JFrame {
         jList1 = new javax.swing.JList<>();
         jToggleButton2 = new javax.swing.JToggleButton();
         jToggleButton3 = new javax.swing.JToggleButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 400));
@@ -292,7 +294,7 @@ public class KlijentSwing extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 45, Short.MAX_VALUE))
         );
 
         jPanel4.setPreferredSize(new java.awt.Dimension(295, 333));
@@ -322,22 +324,29 @@ public class KlijentSwing extends javax.swing.JFrame {
             }
         });
 
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane5.setViewportView(jTextArea1);
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jToggleButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jToggleButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane5))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -362,8 +371,8 @@ public class KlijentSwing extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)))
         );
 
         pack();
@@ -450,7 +459,45 @@ public class KlijentSwing extends javax.swing.JFrame {
             zaPoslatiServeru.write(ATekst);
         }
         
-        
+        try {
+            String line = primljenoOdServera.readLine();
+            if(izbor == 1) {
+                if(line.equals("kontradikcija")) {
+                    jTextArea1.setText("Unesena zadaća je u kontradikciji.");
+                }
+                else if(line.equals("neogranicena fja")) {
+                    jTextArea1.setText("Funkcija cilja je neograničena na danom skupu.");
+                }
+                else {
+                    String tocka[] = line.split(" ");
+                    String ispis = "Maksimum se postiže u točki (";
+                    for(int i = 0; i < tocka.length - 1; i++) ispis += tocka[i] + ", ";
+                    ispis += tocka[tocka.length - 1] + "), a vrijednost funkcije cilja u toj točki je " + primljenoOdServera.readLine() + ".";
+                    jTextArea1.setText(ispis);
+                }
+            }
+            else if(izbor == 2) {
+                if(line.equals("lose dimenzije")) {
+                    jTextArea1.setText("Unesena matrica ima manje redaka nego stupaca, stoga se algoritam ne može provesti.");
+                }
+                else if(line.equals("lin zavisno")) {
+                    jTextArea1.setText("Retci matrice su međusobno linearno zavisni.");
+                }
+                else if(line.equals("pripada konusu")) {
+                    jTextArea1.setText("Uneseni vektor pripada konusnoj ljusci; ne postoji razdvajajuća hiperravnina.");
+                }
+                else {
+                    String vektor[] = line.split(" ");
+                    String ispis = "Vektor normale razdvajajuće hiperravnine je [";
+                    for(int i = 0; i < vektor.length - 1; i++) ispis += vektor[i] + ", ";
+                    ispis += vektor[vektor.length - 1] + "].";
+                    jTextArea1.setText(ispis);
+                }
+            }
+            
+        } catch (IOException ex) {
+            Logger.getLogger(KlijentSwing.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
@@ -465,7 +512,26 @@ public class KlijentSwing extends javax.swing.JFrame {
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
         zaPoslatiServeru.write("poslati korake");
         
+        Vector<String> listData = new Vector<>();
+        
         //citanje koraka i spremanje u listu
+        try {
+            String line = primljenoOdServera.readLine();
+            int brojTablica = Integer.parseInt(line);
+            for(int i = 0; i < brojTablica; i++) {
+                for(int j = 0; j < brojRedaka; j++) {
+                    //parsiram dobivenu liniju
+                    //konvertiram liniju u nešto spremivo u listu
+                }
+                //dodajem element (jednu od tablica) u listu
+            }
+            
+            jList1.setListData(listData);
+        } catch (IOException ex) {
+            Logger.getLogger(KlijentSwing.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(NumberFormatException nfe) {
+            nfe.printStackTrace();
+        }
     }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     /**
@@ -515,9 +581,11 @@ public class KlijentSwing extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JToggleButton jToggleButton1;

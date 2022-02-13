@@ -19,6 +19,15 @@ public class Matrica {
     protected ArrayList<ArrayList<Double>> matrica;     //prvi redak i prvi stupac su varijable (od 1 do n+m); zadnji redak i zadnji stupac su vektori z i b - dakle matrica je dimenzija (m+2)*(n+2)
     protected ArrayList<Double> z;                      //za računanje vrijednsoti fje cilja trebat će nam originalna funkcija cilja
     public ArrayList<ArrayList<ArrayList<Double>>> povijestMatrice = new ArrayList<>();
+    protected ArrayList<Double> tocka;
+    
+    //za linearno programiranje:
+    public boolean zadacaUKontradikciji = false;
+    public boolean neogranicenaFunkcijaCilja = false;
+    //za razdvajajucu hiperravninu:
+    public boolean nedobreDimenzije = false;
+    public boolean linearnaZavisnost = false;
+    public boolean pripadaKonusu = false;
     
     /**
      * 
@@ -32,6 +41,7 @@ public class Matrica {
         n = A.get(0).size();
         
         z = _z;
+        tocka = new ArrayList<>(n);
         
         for(int i = 0; i < m; i++) {
             for(int j = 0; j < n; j++) {
@@ -76,6 +86,7 @@ public class Matrica {
             double indeks = i.get(0);       //gledam indekse koji se nalaze u nultom stupcu
             if(indeks <= n) {               //ako su indeksi <=n, znači da su to varijable koje su ranije bile u prvom retku pa 
                 rez += i.get(n + 1) * z.get((int) indeks);   //evaluiramo fju cilja u toj točki
+                tocka.set((int) indeks, i.get(n + 1));       //i usput punim polje tocka
             }
         }
         return rez;
@@ -179,7 +190,7 @@ public class Matrica {
 		 br = true;
 		 for(int i = 1; i < m+2 ; i++) //Provjerava je li funkcija cilja neogranicena i trazi najmanji index koji zadovoljava uvjet
 		 {      
-                        System.out.println("pokušavam vidjet element na mjestu " + i + ", " + stupac);
+                        //System.out.println("pokušavam vidjet element na mjestu " + i + ", " + stupac);
                         if(matrica.get(i).get(stupac) < 0)
                         {
                             br = false;
@@ -194,6 +205,7 @@ public class Matrica {
 		  if(br)
 		  {
                         System.out.println("Neogranicena funkcija cilja");
+                        neogranicenaFunkcijaCilja = true;
                         return ;
 		  }
 		  GJT1(redak, stupac);
@@ -233,7 +245,10 @@ public class Matrica {
                 }
                 temp++;
             }
-            if(flag == 0) System.out.println("kontradikcija");
+            if(flag == 0) {
+                System.out.println("kontradikcija");
+                zadacaUKontradikciji = true;
+            }
             else {
                 GJT1(r, s);
                 povijestMatrice.add(matrica);
@@ -310,6 +325,7 @@ public class Matrica {
         boolean ok = true;
         if(m < n){
             System.out.println("m < n!");
+            nedobreDimenzije = true;
             return v;
         }
         
@@ -339,6 +355,7 @@ public class Matrica {
             }
             if(!ok){
                 System.out.println("Linearna zavisnost!");
+                linearnaZavisnost = true;
                 return v;
             }
         }
@@ -370,6 +387,7 @@ public class Matrica {
                 }
             if(stop == 0){
                 System.out.println("Vektor pripada hiperravnini.");
+                pripadaKonusu = true;
                 break;
             }
             
