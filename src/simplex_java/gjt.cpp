@@ -1,7 +1,7 @@
 #include "simplex_java_Matrica.h"
 #include <stdio.h>
 
-JNIEXPORT jobject JNICALL Java_simplex_Matrica_GJT
+JNIEXPORT jobject JNICALL Java_simplex_1java_Matrica_GJT
   (JNIEnv *env, jobject javaobj, jobject mat1, jint r, jint s){
 
     //klase i metode
