@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @author nena
  */
 public class Simplex_java {
-    static {System.loadLibrary("gjt");}
+    //static {System.loadLibrary("gjt");}
 
     /**
      * @param args the command line arguments
@@ -69,7 +69,7 @@ public class Simplex_java {
         z.add(-12.0);
         
         Matrica simpleks = new Matrica(A, b, z);
-        //simpleks.prviPlan();
+        simpleks.prviPlan();
         
         for(var i : simpleks.povijestMatrice) {
             for(var j : i) {

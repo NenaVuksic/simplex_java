@@ -41,7 +41,9 @@ public class Matrica {
         n = A.get(0).size();
         
         z = _z;
-        tocka = new ArrayList<>(n);
+        
+        tocka = new ArrayList<>(Arrays.asList(new Double[n]));
+        Collections.fill(tocka, 0.0);
         
         for(int i = 0; i < m; i++) {
             for(int j = 0; j < n; j++) {
@@ -81,15 +83,21 @@ public class Matrica {
      * @return vrijednost funkcije cilja 
      */
     public double vrijednostFunkcijeCilja() {
-        double rez = 0.0;
+        return matrica.get(m + 1).get(n + 1);       //s obzirom da Kristinin GJT sadrži vrijednost fje cilja u tablici, možemo ovak
+    }
+    
+    public ArrayList<Double> tocka() {              //dost glupa metoda za traženje optimalne točke
+        int brojac = 0;
         for(var i : matrica) {
-            double indeks = i.get(0);       //gledam indekse koji se nalaze u nultom stupcu
-            if(indeks <= n) {               //ako su indeksi <=n, znači da su to varijable koje su ranije bile u prvom retku pa 
-                rez += i.get(n + 1) * z.get((int) indeks);   //evaluiramo fju cilja u toj točki
-                tocka.set((int) indeks, i.get(n + 1));       //i usput punim polje tocka
+            if(brojac > 0 && brojac < m + 1) {
+                int indeks = i.get(0).intValue();       //gledam indekse koji se nalaze u nultom stupcu
+                if(indeks <= n) {               //ako su indeksi <=n, znači da su to varijable koje su ranije bile u prvom retku pa 
+                    tocka.set(indeks - 1, i.get(n + 1));       //i usput punim polje tocka
+                }
             }
+            brojac++;
         }
-        return rez;
+        return tocka;           
     }
     
     /**
@@ -255,7 +263,7 @@ public class Matrica {
 //		final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, r, s);
 //                povijestMatrice.add(matrica1);
 //		matrica = copyM(matrica1);
-//                prviPlan();
+                prviPlan();
             }
         }  
         
@@ -367,8 +375,8 @@ public class Matrica {
                     break;}
             GJT1(ind.get(j),i);
 //	    final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, ind.get(j), i);
-//            ind2.add(ind.get(j));
-//            ind.remove(j);
+            ind2.add(ind.get(j));
+            ind.remove(j);
             povijestMatrice.add(matrica);
 //	    matrica = copyM(matrica1);
         }

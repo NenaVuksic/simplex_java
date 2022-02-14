@@ -425,38 +425,40 @@ public class KlijentSwing extends javax.swing.JFrame {
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         provjeriUnos(model1.getDataVector());
-        provjeriUnos(model2.getDataVector());
-        provjeriUnos(model3.getDataVector());
+        if(izbor == 1) {
+            provjeriUnos(model2.getDataVector());
+            provjeriUnos(model3.getDataVector());
+        }
         
-        zaPoslatiServeru.write(izbor + " " + brojRedaka + " " + brojStupaca);
+        zaPoslatiServeru.println(izbor + " " + brojRedaka + " " + brojStupaca);
         
         if(izbor == 1) {
-            zaPoslatiServeru.write("z");
+            zaPoslatiServeru.println("z");
             String zTekst = "";
             for(var i : model2.getDataVector()) {
                 for(var j : i) {
                     zTekst += j.toString() + " ";
                 }
             }
-            zaPoslatiServeru.write(zTekst);
-        }
-        
-        zaPoslatiServeru.write("b");
-        String bTekst = "";
-        for(var i : model3.getDataVector()) {
-            for(var j : i) {
-                bTekst += j.toString() + " ";
+            zaPoslatiServeru.println(zTekst);
+            
+            zaPoslatiServeru.println("b");
+            String bTekst = "";
+            for(var i : model3.getDataVector()) {
+                for(var j : i) {
+                    bTekst += j.toString() + " ";
+                }
             }
+            zaPoslatiServeru.println(bTekst);
         }
-        zaPoslatiServeru.write(bTekst);
         
-        zaPoslatiServeru.write("A");
+        zaPoslatiServeru.println("A");
         for(var i: model1.getDataVector()) {
             String ATekst = "";
             for(var j : i){
                 ATekst += j.toString() + " ";
             }
-            zaPoslatiServeru.write(ATekst);
+            zaPoslatiServeru.println(ATekst);
         }
         
         try {
@@ -501,7 +503,7 @@ public class KlijentSwing extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
-        zaPoslatiServeru.write("kraj");
+        zaPoslatiServeru.println("kraj");
         try {
             uticnica.close();
         } catch(IOException e) {
@@ -510,7 +512,7 @@ public class KlijentSwing extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleButton3ActionPerformed
 
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        zaPoslatiServeru.write("poslati korake");
+        zaPoslatiServeru.println("poslati korake");
         
         Vector<String> listData = new Vector<>();
         
@@ -519,11 +521,29 @@ public class KlijentSwing extends javax.swing.JFrame {
             String line = primljenoOdServera.readLine();
             int brojTablica = Integer.parseInt(line);
             for(int i = 0; i < brojTablica; i++) {
-                for(int j = 0; j < brojRedaka; j++) {
-                    //parsiram dobivenu liniju
-                    //konvertiram liniju u nešto spremivo u listu
+                String tablica = "<html><table style:'border-collapse: collapse; border:1px solid black;'>";
+                for(int j = 0; j < brojRedaka + 2; j++) {       //brojRedaka je ovdje broj redaka od A, a ne cijele tablice
+                    //parsiram dobivenu liniju - pretpostavljam da će biti u obliku "broj broj broj ... broj"
+                    tablica += "<tr>";
+                    
+                    line = primljenoOdServera.readLine();
+                    String redak[] = line.split(" ");
+                    
+                    if(j == 0 || j == brojRedaka + 1) tablica += "<td> </td>";    //prvi i zadnji redak na prvom mjestu imaju prazno polje
+                    else tablica += "<td>x<sub>" + ((int) Double.parseDouble(redak[0])) + "</sub></td>";    //srednji retci na prvom mjestu imaju varijable
+                    
+                    for(int k = 1; k < redak.length; k++) {
+                        if(j == 0) {
+                            if(k == redak.length - 1) tablica += "<td> </td>";
+                            else tablica += "<td>x<sub>" + ((int) Double.parseDouble(redak[k])) + "</sub></td>";
+                        }
+                        else tablica += "<td>" + redak[k] + "</td>";
+                    }
+                    
+                    tablica += "</tr>";
                 }
-                //dodajem element (jednu od tablica) u listu
+                tablica += "</table></html>";
+                listData.add(tablica);
             }
             
             jList1.setListData(listData);
