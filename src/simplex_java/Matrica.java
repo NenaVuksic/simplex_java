@@ -71,7 +71,7 @@ public class Matrica {
         noviRedak = new ArrayList<>();
         noviRedak.add(Double.NaN);
         noviRedak.addAll(_z);
-        noviRedak.add(Double.NaN);
+        noviRedak.add(Double.valueOf(0));
         matrica.add(noviRedak);
         
         povijestMatrice.add(matrica);
