@@ -13,16 +13,41 @@ import java.util.ArrayList;
  * @author Mirna
  */
 public class Dretva implements Runnable {
+    /**
+     * utičnica za komunikaciju s klijentom
+     */
     private final Socket clientSocket;
     
-    public ArrayList<ArrayList<Double>> A = new ArrayList<>();
-    public ArrayList<Double> b = new ArrayList<>();
-    public ArrayList<Double> z = new ArrayList<>();
+    /**
+     * matrica A u zadaći linearnog programiranja Ax &le; b, ili cijela potrebna matrica za algoritam za razdvajajuću hiperravninu. Podaci u ovom polju zaprimaju se od klijenta.
+     */
+    private ArrayList<ArrayList<Double>> A = new ArrayList<>();
+    /**
+     * stupac b u zadaći linearnog programiranja Ax &le; b. Podaci u ovom polju zaprimaju se od klijenta.
+     */
+    private ArrayList<Double> b = new ArrayList<>();
+    /**
+     * redak z u zadaći linearnog programiranja Ax &le; b. Podaci u ovom polju zaprimaju se od klijenta.
+     */
+    private ArrayList<Double> z = new ArrayList<>();
     
+    /** 
+     * pisač za slanje poruka klijentu
+     */
     private PrintWriter zaPoslati = null;
+    /**
+     * čitač za primanje poruka od klijenta
+     */
     private BufferedReader primljenoOdKlijenta = null;
+    /**
+     * instanca klase Matrica nad kojom klijent želi odraditi operacije
+     */
     private Matrica simpleks;
     
+    /**
+     * konstruktor za klasu Dretva
+     * @param uticnica za mrežnu komunikaciju s klijentom
+     */
     public Dretva(Socket uticnica) {
         clientSocket = uticnica;
     }
@@ -167,6 +192,9 @@ public class Dretva implements Runnable {
         }
     }
     
+    /**
+     * metoda koja uzima tablice iz baze podataka te ih šalje klijentu. Navedene tablice predstavljaju korake u radu implementiranih algoritama.
+     */
     private void posaljiKorake() {
         //ovdje cupamo linije iz baze i saljemo klijentu
         

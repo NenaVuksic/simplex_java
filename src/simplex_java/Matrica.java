@@ -14,25 +14,58 @@ import java.util.*;
  */
 
 public class Matrica {
-    protected int m;        //broj redaka matrice A
-    protected int n;        //broj stupaca matrice A
-    protected ArrayList<ArrayList<Double>> matrica;     //prvi redak i prvi stupac su varijable (od 1 do n+m); zadnji redak i zadnji stupac su vektori z i b - dakle matrica je dimenzija (m+2)*(n+2)
-    protected ArrayList<Double> z;                      //za računanje vrijednsoti fje cilja trebat će nam originalna funkcija cilja
+    /**
+     * broj redaka matrice A
+     */
+    protected int m;
+    /**
+     * broj stupaca matrice A
+     */
+    protected int n;
+    /**
+     * polje koje reprezentira simplex tablicu. Prvi redak i prvi stupac su popisi varijabli (koje numeriramo od 1 do n+m); zadnji redak i zadnji stupac su vektori z i b. Dakle matrica je dimenzija (m+2)*(n+2).
+     */
+    protected ArrayList<ArrayList<Double>> matrica;
+    /**
+     * vektor funkcije cilja.
+     */
+    protected ArrayList<Double> z;                      
+    /**
+     * pomoćno polje u kojem pamtimo sva stanja simplex tablice
+     */
     public ArrayList<ArrayList<ArrayList<Double>>> povijestMatrice = new ArrayList<>();
+    /**
+     * ovo polje reprezentira jedan od vrhova politopa zadanog s Ax &le; b.
+     */
     protected ArrayList<Double> tocka;
     
     //za linearno programiranje:
+    /**
+     * Pri provođenju algoritma za prvi plan moguće je detektirati je li politop zadan s Ax &le; b u stvari prazan skup. Ova varijabla je odgovor na to pitanje.
+     */
     public boolean zadacaUKontradikciji = false;
+    /**
+     * Pri provođenju algoritma za optimalni plan moguće je detektirati je li funkcija cilja neograničena na zadanom politopu. Ova varijabla je odgovor na to pitanje.
+     */
     public boolean neogranicenaFunkcijaCilja = false;
     //za razdvajajucu hiperravninu:
+    /**
+     * Algoritam za razdvajajuću hiperravninu nije moguće provesti u slučaju da matrica A ima manje redaka nego stupaca. Ova varijabla služi za detektiranje takve situacije.
+     */
     public boolean nedobreDimenzije = false;
+    /**
+     * Algoritam za razdvajajuću hiperravninu nije moguće provesti u slučaju da matrica A ima međusobno linearno zavisne retke. Ova varijabla služi za detektiranje takve situacije.
+     */
     public boolean linearnaZavisnost = false;
+    /**
+     * Odgovor na pitanje pripada li dani vektor opisanom konusu pri provođenju algoritma za razdvajajuću hiperravninu.
+     */
     public boolean pripadaKonusu = false;
     
     /**
-     * 
-     * @param A matrica dimenzija m*n koja definira skup dopustivih točaka x, sa Ax &lt;= b
-     * @param b matrica dimenzija n*1 koja definira skup dopustivih točaka x, sa Ax &lt;= b
+     * konstruktor klase Matrica
+     * @param A matrica dimenzija m*n koja definira skup dopustivih točaka x, sa Ax &le; b
+     * @param b matrica dimenzija n*1 koja definira skup dopustivih točaka x, sa Ax &le; b
      * @param _z matrica dimenzija 1*m koja reprezentira funkciju cilja
      */
     public Matrica(ArrayList<ArrayList<Double>> A, ArrayList<Double> b, ArrayList<Double> _z) {   //pravim simplex tablicu za zadani problem z^T * x -> max, Ax <= b
@@ -86,7 +119,12 @@ public class Matrica {
         return matrica.get(m + 1).get(n + 1);       //s obzirom da Kristinin GJT sadrži vrijednost fje cilja u tablici, možemo ovak
     }
     
-    public ArrayList<Double> tocka() {              //dost glupa metoda za traženje optimalne točke
+    /**
+     * Metoda koja vraća optimalnu točku danog problema linearnog programiranja, ukoliko je pozvana nakon metode prviPlan(). 
+     * 
+     * @return točka dimenzije <b>n</b>.
+     */
+    public ArrayList<Double> tocka() {              
         int brojac = 0;
         for(var i : matrica) {
             if(brojac > 0 && brojac < m + 1) {
@@ -160,7 +198,14 @@ public class Matrica {
         
         matrica = novaMatrica;
     }
-	
+    
+    /**
+     * Zaglavlje nativne C++ metode za Gauss-Jordanovu transformaciju matrice <b>mat</b> na koordinatama (<b>redak</b>, <b>stupac</b>).
+     * @param mat simplex tablica na kojoj se poziva GJT
+     * @param redak redni broj retka u kojem je ključni element transformacije
+     * @param stupac redni broj stupca u kojem je ključni element transformacije
+     * @return transformirana simplex tablica s prilagođenom bazom i vrijednošću funkcije cilja
+     */
     public native ArrayList<ArrayList<Double>> GJT(ArrayList<ArrayList<Double>> mat, int redak, int stupac);
     
     /**
@@ -272,7 +317,7 @@ public class Matrica {
     //za provjeru lin. nezavisnosti - Gaussove eliminacije
     /**
      * Provjera linearne nezavisnosti.
-     * @param mat simplex tablica (?)
+     * @param mat simplex tablica 
      * @return odgovor na pitanje jesu li retci dane matrice linearno nezavisni
      */
     public boolean Gauss(ArrayList<ArrayList<Double>> mat){
@@ -324,7 +369,7 @@ public class Matrica {
     }
     
     /**
-     * Implementacija algoritma za razdvajajuću hiperravninu. Ako vektor <b>b</b> pripada konusnoj ljusci zadanih m vektora, vraca se prazan vektor. U suprotnom se vraca vektor normale hiperravnine koja razdvaja spomenuti konus od <b>b</b>.
+     * Implementacija algoritma za razdvajajuću hiperravninu. Ako vektor <b>b</b> pripada konusnoj ljusci zadanih m vektora, vraća se prazan vektor. U suprotnom se vraća vektor normale hiperravnine koja razdvaja spomenuti konus od <b>b</b>.
      * @return vektor normale razdvajajuce hiperravnine, ako postoji
      */
     public ArrayList<Double> razdvajajucaHiperravnina() {
