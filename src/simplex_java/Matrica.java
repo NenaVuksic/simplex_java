@@ -175,7 +175,7 @@ public class Matrica {
             {
 		pom = -1.0;
 		br = true;
-		for(int i = 1; i < n+2; i++) //Provjerava je li matrica vec u optimalnom stanju i trazi najmanji index koji zadovoljava uvjet
+		for(int i = 1; i < n+1; i++) //Provjerava je li matrica vec u optimalnom stanju i trazi najmanji index koji zadovoljava uvjet
 		{
 			if(matrica.get(m + 1).get(i) > 0)
                         {
@@ -196,7 +196,7 @@ public class Matrica {
 		 pom = -1.0;
 		 pom_min = Double.MAX_VALUE;
 		 br = true;
-		 for(int i = 1; i < m+2 ; i++) //Provjerava je li funkcija cilja neogranicena i trazi najmanji index koji zadovoljava uvjet
+		 for(int i = 1; i < m+1 ; i++) //Provjerava je li funkcija cilja neogranicena i trazi najmanji index koji zadovoljava uvjet
 		 {      
                         //System.out.println("pokušavam vidjet element na mjestu " + i + ", " + stupac);
                         if(matrica.get(i).get(stupac) < 0)
@@ -378,6 +378,7 @@ public class Matrica {
             ind2.add(ind.get(j));
             ind.remove(j);
             povijestMatrice.add(matrica);
+//	    povijestMatrice.add(matrica1);
 //	    matrica = copyM(matrica1);
         }
         for(i = 1; i < n+1; i++){
@@ -388,7 +389,7 @@ public class Matrica {
             int stop = 0;
             int l = -1;
             for(i = 1; i < n+1; i++)
-                if(matrica.get(m+1).get(i) < 0){
+                if(matrica.get(m).get(i) < 0){
                     stop = 1;
                     l = i;
                     break;
@@ -403,7 +404,7 @@ public class Matrica {
             // stop = 1;
             k = -1;
             double minK = 0;
-            for(i = n+1; i < m+1; i++){
+            for(i = n+1; i < m; i++){
                 if(matrica.get(i).get(l) < 0){
                     stop = 0;
                     k = i;
