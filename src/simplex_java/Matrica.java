@@ -434,7 +434,7 @@ public class Matrica {
             int stop = 0;
             int l = -1;
             for(i = 1; i < n+1; i++)
-                if(matrica.get(m).get(i) < 0){
+                if(matrica.get(m+1).get(i) < 0){
                     stop = 1;
                     l = i;
                     break;
@@ -449,7 +449,7 @@ public class Matrica {
             // stop = 1;
             k = -1;
             double minK = 0;
-            for(i = n+1; i < m; i++){
+            for(i = n+1; i < m+1; i++){
                 if(matrica.get(i).get(l) < 0){
                     stop = 0;
                     k = i;
