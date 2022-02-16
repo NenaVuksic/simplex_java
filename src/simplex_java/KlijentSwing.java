@@ -58,9 +58,9 @@ public class KlijentSwing extends javax.swing.JFrame {
         jTable3.setTableHeader(null);
         jScrollPane3.setColumnHeaderView(null);
         
-        jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
-        jScrollPane2.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
-        jScrollPane3.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
+//        jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
+//        jScrollPane2.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
+//        jScrollPane3.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
         
         try {
             uticnica = new Socket("127.0.0.1", 6789);                           //ovdje treba staviti IP adresu i port računala s faksa!!
@@ -307,7 +307,7 @@ public class KlijentSwing extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList1.setPreferredSize(new java.awt.Dimension(295, 333));
+        jList1.setPreferredSize(new java.awt.Dimension(400, 333));
         jScrollPane4.setViewportView(jList1);
 
         jToggleButton2.setText("Prikaži korake");
@@ -405,7 +405,7 @@ public class KlijentSwing extends javax.swing.JFrame {
         model3.setColumnCount(1);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
-    private void provjeriUnos(Vector<Vector> v) {
+    private boolean provjeriUnos(Vector<Vector> v) {
         for(var i : v) {   //provjera unosa
             for(var j : i) {
                 try{
@@ -415,33 +415,28 @@ public class KlijentSwing extends javax.swing.JFrame {
                         Integer temp2 = Integer.parseInt(j.toString());
                     } catch(NumberFormatException nfe2){
                         JOptionPane.showMessageDialog(this, "Potrebno je unijeti isključivo brojeve u sva polja!", "Pogrešan unos", JOptionPane.WARNING_MESSAGE);
+                        return false;
                     }
                 } catch(NullPointerException npe) {
                     JOptionPane.showMessageDialog(this, "Potrebno je unijeti isključivo brojeve u sva polja!", "Pogrešan unos", JOptionPane.WARNING_MESSAGE);
+                    return false;
                 }
             }
         }
+        return true;
     }
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        provjeriUnos(model1.getDataVector());
-        if(izbor == 1) {
-            provjeriUnos(model2.getDataVector());
-            provjeriUnos(model3.getDataVector());
-        }
+        boolean provjera1 = provjeriUnos(model1.getDataVector());
+        boolean provjera2 = provjeriUnos(model2.getDataVector());
+        boolean provjera3 = true;
+        if(izbor == 1) provjera3 = provjeriUnos(model3.getDataVector());        //b se provjerava samo ako radimo linprog
+        
+        if(!provjera1 || !provjera2 || !provjera3) return;
         
         zaPoslatiServeru.println(izbor + " " + brojRedaka + " " + brojStupaca);
         
-        if(izbor == 1) {
-            zaPoslatiServeru.println("z");
-            String zTekst = "";
-            for(var i : model2.getDataVector()) {
-                for(var j : i) {
-                    zTekst += j.toString() + " ";
-                }
-            }
-            zaPoslatiServeru.println(zTekst);
-            
+        if(izbor == 1) {    
             zaPoslatiServeru.println("b");
             String bTekst = "";
             for(var i : model3.getDataVector()) {
@@ -451,6 +446,15 @@ public class KlijentSwing extends javax.swing.JFrame {
             }
             zaPoslatiServeru.println(bTekst);
         }
+        
+        zaPoslatiServeru.println("z");
+        String zTekst = "";
+        for(var i : model2.getDataVector()) {
+            for(var j : i) {
+                zTekst += j.toString() + " ";
+            }
+        }
+        zaPoslatiServeru.println(zTekst);
         
         zaPoslatiServeru.println("A");
         for(var i: model1.getDataVector()) {
@@ -528,7 +532,7 @@ public class KlijentSwing extends javax.swing.JFrame {
                     
                     line = primljenoOdServera.readLine();
                     String redak[] = line.split(" ");
-                    
+                    /*
                     if(j == 0 || j == brojRedaka + 1) tablica += "<td> </td>";    //prvi i zadnji redak na prvom mjestu imaju prazno polje
                     else tablica += "<td>x<sub>" + ((int) Double.parseDouble(redak[0])) + "</sub></td>";    //srednji retci na prvom mjestu imaju varijable
                     
@@ -538,6 +542,18 @@ public class KlijentSwing extends javax.swing.JFrame {
                             else tablica += "<td>x<sub>" + ((int) Double.parseDouble(redak[k])) + "</sub></td>";
                         }
                         else tablica += "<td>" + redak[k] + "</td>";
+                    }
+                    */
+                    for(int k = 0; k < redak.length; k++) {
+                        if(redak[k].equals("Double.NaN") || redak[k].equals("NaN")) {
+                            tablica += "<td> </td>";
+                            continue;
+                        }
+                        if(j == 0) tablica += "<td>x<sub>" + ((int) Double.parseDouble(redak[k])) + "</sub></td>";
+                        else {
+                            if(k == 0) tablica += "<td>x<sub>" + ((int) Double.parseDouble(redak[0])) + "</sub></td>";
+                            else tablica += "<td>" + redak[k] + "</td>";
+                        }
                     }
                     
                     tablica += "</tr>";

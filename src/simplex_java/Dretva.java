@@ -59,37 +59,30 @@ public class Dretva implements Runnable {
             while(true) {
                 String line = primljenoOdKlijenta.readLine();
                 if(line.equals("kraj")) break;
+                if(line.equals("poslati korake")) {
+                    posaljiKorake();
+                    continue;
+                }
                 String prvaLinija[] = line.split(" ");
                 int izbor = Integer.parseInt(prvaLinija[0]);
                 int brojRedaka = Integer.parseInt(prvaLinija[1]);
                 int brojStupaca = Integer.parseInt(prvaLinija[2]);
 
-                if(izbor == 1) {
+                //prvo stiže b:
+                if(izbor == 1) {    
                     line = primljenoOdKlijenta.readLine();
                     if(line.equals("kraj")) break;
-                    if("z".equals(line)) {
-                        line = primljenoOdKlijenta.readLine();
-                        if(line.equals("kraj")) break;
-                        String zTekst[] = line.split(" ");
-                        for(int i = 0; i < zTekst.length; i++) {
-                            double novi = Double.NaN;
-                            try{
-                                novi = Double.parseDouble(zTekst[i]);
-                            } catch(NumberFormatException nfe1) {
-                                try {
-                                    novi = (double) Integer.parseInt(zTekst[i]);
-                                } catch(NumberFormatException nfe2) {
-                                    nfe2.printStackTrace();
-                                }
-                            }
-                            z.add(novi);
-                        }
+                    if(line.equals("poslati korake")) {
+                        posaljiKorake();
+                        continue;
                     }
-                    
-                    line = primljenoOdKlijenta.readLine();
                     if("b".equals(line)) {
                         line = primljenoOdKlijenta.readLine();
                         if(line.equals("kraj")) break;
+                        if(line.equals("poslati korake")) {
+                            posaljiKorake();
+                            continue;
+                        }
                         String bTekst[] = line.split(" ");
                         for(int i = 0; i < bTekst.length; i++) {
                             double novi = Double.NaN;
@@ -106,20 +99,58 @@ public class Dretva implements Runnable {
                         }
                     }
                 }
-                else {
-                    for(int i = 0; i < brojStupaca; i++) z.add(Double.NaN);
-                    for(int i = 0; i < brojRedaka; i++) b.add(Double.NaN);
-                }     //da z ne bude null pri kreiranju matrice na kojoj pozivamo algoritam za razdvajajuću hiperravninu
+                else for(int i = 0; i < brojRedaka; i++) b.add(Double.NaN);  //da b ne bude null pri kreiranju matrice na kojoj pozivamo algoritam za razdvajajuću hiperravninu
 
+                //onda stiže z:
                 line = primljenoOdKlijenta.readLine();
                 if(line.equals("kraj")) break;
+                if(line.equals("poslati korake")) {
+                    posaljiKorake();
+                    continue;
+                }
+                if("z".equals(line)) {
+                    line = primljenoOdKlijenta.readLine();
+                    if(line.equals("kraj")) break;
+                    if(line.equals("poslati korake")) {
+                        posaljiKorake();
+                        continue;
+                    }
+                    String zTekst[] = line.split(" ");
+                    for(int i = 0; i < zTekst.length; i++) {
+                        double novi = Double.NaN;
+                        try{
+                            novi = Double.parseDouble(zTekst[i]);
+                        } catch(NumberFormatException nfe1) {
+                            try {
+                                novi = (double) Integer.parseInt(zTekst[i]);
+                            } catch(NumberFormatException nfe2) {
+                                nfe2.printStackTrace();
+                            }
+                        }
+                        z.add(novi);
+                    }
+                }
+                
+                //i onda A, redak po redak:
+                line = primljenoOdKlijenta.readLine();
+                if(line.equals("kraj")) break;
+                if(line.equals("poslati korake")) {
+                    posaljiKorake();
+                    continue;
+                }
                 boolean procitanKraj = false;
+                boolean procitanPosalji = false;
                 if("A".equals(line)) {
                     for(int j = 0; j < brojRedaka; j++) {
                         ArrayList<Double> temp = new ArrayList<>();
                         line = primljenoOdKlijenta.readLine();
                         if(line.equals("kraj")) {
                             procitanKraj = true;
+                            break;
+                        }
+                        if(line.equals("poslati korake")) {
+                            posaljiKorake();
+                            procitanPosalji = true;
                             break;
                         }
                         String ATekst[] = line.split(" ");
@@ -141,6 +172,7 @@ public class Dretva implements Runnable {
                         A.add(temp);
                     }
                     if(procitanKraj) break;
+                    if(procitanPosalji) continue;
                 }
                 
                 simpleks = new Matrica(A, b, z);
@@ -167,12 +199,6 @@ public class Dretva implements Runnable {
                         zaPoslati.println(temp);
                     }
                 }
-                
-                line = primljenoOdKlijenta.readLine();
-                if(line.equals("kraj")) break;
-                if(line.equals("poslati korake")) posaljiKorake();
-                
-                //break; //za svaki slucaj nek izade odmah nakon prve iteracije
             }
         }
         catch(IOException e) {
