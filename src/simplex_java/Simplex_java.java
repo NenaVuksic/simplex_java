@@ -8,13 +8,17 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 /**
  *
  * @author nena
  */
 public class Simplex_java {
-    //static {System.loadLibrary("gjt");}
+    static {System.loadLibrary("gjt");}
+    static HashMap<Integer, ArrayList<String>> mapa = new HashMap<>();
+    static int brojac = 0;
 
     /**
      * @param args the command line arguments
@@ -68,25 +72,39 @@ public class Simplex_java {
         z.add(-18.0);
         z.add(-12.0);
         
-        Matrica simpleks = new Matrica(A, b, z);
+        mapa.put(50, new ArrayList<>());
+        
+        Matrica simpleks = new Matrica(A, b, z, 50);
         simpleks.prviPlan();
         
-        for(var i : simpleks.povijestMatrice) {
-            for(var j : i) {
+        ArrayList<String> pov = mapa.get(50);
+        for(var i : pov) {
+            /*for(var j : i) {
                 System.out.println(j);
-            }
+            }*/
+            System.out.println(i);
             System.out.println("");
         }
         
         ServerSocket server = null;
         try {
-            server = new ServerSocket(6789);
+            server = new ServerSocket(6799);
             server.setReuseAddress(true);
             
             while(true) {
                 Socket klijent = server.accept();
                 System.out.println("novi klijent: " + klijent.getInetAddress().getHostAddress());
-                Dretva novaDretva = new Dretva(klijent);
+                int id = brojac;
+                if(brojac != 0){
+                    for(int i = 0; i < brojac; i++)
+                        if(!mapa.containsKey(i)){
+                            id = i;
+                            break;
+                        }
+                }
+                Dretva novaDretva = new Dretva(klijent, id);
+                mapa.put(id, new ArrayList<>());
+                brojac = Collections.max(mapa.keySet()) + 1;
                 new Thread(novaDretva).start();
             }
         }
