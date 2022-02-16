@@ -66,7 +66,7 @@ public class Matrica {
      * konstruktor klase Matrica
      * @param A matrica dimenzija m*n koja definira skup dopustivih točaka x, sa Ax &le; b
      * @param b matrica dimenzija n*1 koja definira skup dopustivih točaka x, sa Ax &le; b
-     * @param _z matrica dimenzija 1*m koja reprezentira funkciju cilja
+     * @param _z matrica dimenzija 1*m koja reprezentira funkciju cilja 
      */
     public Matrica(ArrayList<ArrayList<Double>> A, ArrayList<Double> b, ArrayList<Double> _z) {   //pravim simplex tablicu za zadani problem z^T * x -> max, Ax <= b
         matrica = new ArrayList<>();

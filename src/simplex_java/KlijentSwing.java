@@ -395,14 +395,22 @@ public class KlijentSwing extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Uneseni brojevi moraju biti prirodni!", "Pogrešan unos", JOptionPane.WARNING_MESSAGE);
         }
         
+        model1.getDataVector().removeAllElements();
         model1.setRowCount(brojRedaka);
         model1.setColumnCount(brojStupaca);
+        model1.fireTableDataChanged();
         
+        System.out.println(model1.getDataVector());
+        
+        model2.getDataVector().removeAllElements();
         model2.setRowCount(1);
         model2.setColumnCount(brojStupaca);
+        model2.fireTableDataChanged();
         
+        model3.getDataVector().removeAllElements();
         model3.setRowCount(brojRedaka);
         model3.setColumnCount(1);
+        model3.fireTableDataChanged();
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private boolean provjeriUnos(Vector<Vector> v) {
@@ -439,6 +447,7 @@ public class KlijentSwing extends javax.swing.JFrame {
         if(izbor == 1) {    
             zaPoslatiServeru.println("b");
             String bTekst = "";
+            System.out.println(model3.getDataVector());
             for(var i : model3.getDataVector()) {
                 for(var j : i) {
                     bTekst += j.toString() + " ";
