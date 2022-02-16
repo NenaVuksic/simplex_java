@@ -17,6 +17,7 @@ public class Dretva implements Runnable {
      * utičnica za komunikaciju s klijentom
      */
     private final Socket clientSocket;
+    int ID;
     
     /**
      * matrica A u zadaći linearnog programiranja Ax &le; b, ili cijela potrebna matrica za algoritam za razdvajajuću hiperravninu. Podaci u ovom polju zaprimaju se od klijenta.
@@ -48,8 +49,9 @@ public class Dretva implements Runnable {
      * konstruktor za klasu Dretva
      * @param uticnica za mrežnu komunikaciju s klijentom
      */
-    public Dretva(Socket uticnica) {
+    public Dretva(Socket uticnica, int id) {
         clientSocket = uticnica;
+        ID = id;
     }
     
     @Override public void run() {
@@ -175,7 +177,7 @@ public class Dretva implements Runnable {
                     if(procitanPosalji) continue;
                 }
                 
-                simpleks = new Matrica(A, b, z);
+                simpleks = new Matrica(A, b, z, ID);
                 
                 if(izbor == 1) {
                     simpleks.prviPlan();
