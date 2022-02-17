@@ -138,7 +138,7 @@ public class Matrica {
      * stvara novi zapis u bazi podataka, koji se sastoji od jedinstvene oznake, rednog broja dretve iz koje se metoda poziva te stringa koji reprezentira danu matricu u HTML formatu.
      * @param mat matrica koju želimo zapisati u bazu podataka
      */
-    public void pisiUBazu(ArrayList<ArrayList<Double>> mat){
+    public synchronized void pisiUBazu(ArrayList<ArrayList<Double>> mat){
         String matS = "<html><table style:'border-collapse: collapse; border:1px solid black;'>";
         int velicina = mat.size();
         for(int i = 0; i < velicina; i++) {

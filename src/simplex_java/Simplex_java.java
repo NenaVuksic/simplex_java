@@ -7,10 +7,9 @@ package simplex_java;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Main klasa. 
@@ -94,12 +93,15 @@ public class Simplex_java {
                         + "tablica text );";
         
         ServerSocket server = null;
+        Connection konekcija = null;
         
         try {
-            Connection konekcija = DriverManager.getConnection(url); 
+            konekcija = DriverManager.getConnection(url); 
             Statement stmt = konekcija.createStatement();
             
-            if(konekcija != null) stmt.execute(sql);
+            stmt.execute("DELETE FROM klijenti ;");
+            
+            stmt.execute(sql);
             
             server = new ServerSocket(7777);
             server.setReuseAddress(true);
@@ -125,6 +127,14 @@ public class Simplex_java {
                 catch (IOException e){
                     e.printStackTrace();
                 }
+            }
+            if(konekcija != null) {
+                try {
+                    konekcija.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Simplex_java.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
             }
         }
     }
