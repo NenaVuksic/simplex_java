@@ -361,11 +361,11 @@ public class Matrica {
     
     //za provjeru lin. nezavisnosti - Gaussove eliminacije
     /**
-     * Provjera linearne nezavisnosti.
+     * Racuna rang matrice Gaussovim eliminacijama.
      * @param mat simplex tablica 
-     * @return odgovor na pitanje jesu li retci dane matrice linearno nezavisni
+     * @return rang matrice
      */
-    public boolean Gauss(ArrayList<ArrayList<Double>> mat){
+    public int Gauss(ArrayList<ArrayList<Double>> mat){
         int r = mat.size(), r1 = 0;
         int i, j, k;
         double p, p1;
@@ -394,9 +394,9 @@ public class Matrica {
         r1=r;
         for(i = 1; i < r; i++){
             j = Collections.frequency(mat.get(i).subList(1,mat.get(i).size()-1), 0.0);
-            if(j == mat.get(i).size()-2) r1--;
+            if(j == mat.get(i).size()-1) r1--;
         }
-        return r == r1;
+        return r1;
     }
     
     //copy matrice
@@ -432,7 +432,8 @@ public class Matrica {
             ind.add(i);
         
         ArrayList<ArrayList<Double>> mat1 = copyM(matrica.subList(1,n+1));
-        if(!Gauss(mat1)){
+	int rang = mat1.size()
+        if(Gauss(mat1) != rang){
             ok = false;
             for(j = n; j > 0; j--){
                 ind.remove(j-1);
@@ -442,7 +443,8 @@ public class Matrica {
                     mat1.addAll(mat2);
                     ArrayList<Double> v1 = new ArrayList<Double>(matrica.get(i));
                     mat1.add(v1);
-                    if(Gauss(mat1)){
+		    int rang1 = mat1.size();
+                    if(Gauss(mat1) == rang1){
                         ok = true;
                         ind.add(i);
                         break;
