@@ -548,16 +548,16 @@ public class Matrica {
      * @return rang matrice A
      */
     public int rangMatrice(){
-        int rank = m;
+        int rank = n;
         boolean flag;
         for(int i=1; i < n+1; i++)
         {
             flag = false;
             for(int j=1; j < m+1; j++)
             {
-                if(matrica.get(i).get(j)!=0 && matrica.get(i).get(0)>n)
+                if(matrica.get(j).get(i)!=0 && matrica.get(j).get(0)>n)
                 {
-                    GJT1(i,j);
+                    GJT1(j,i);
                     flag = true;
                     break;
                 }
@@ -591,10 +591,10 @@ public class Matrica {
                     matrica.get(i).set(j, matricainverz.get(i).get(j));
                 }
             }
-                
+            pisiUBazu(matrica);
         }
         
-        pisiUBazu(matrica);
+        
         return rank;
     }
 }
