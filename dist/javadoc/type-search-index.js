@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"simplex_java","l":"Dretva"},{"p":"simplex_java","l":"KlijentSwing"},{"p":"simplex_java","l":"Matrica"},{"p":"simplex_java","l":"Simplex_java"}];updateSearchResults();
