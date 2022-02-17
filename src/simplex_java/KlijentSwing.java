@@ -546,6 +546,7 @@ public class KlijentSwing extends javax.swing.JFrame {
         model3.setRowCount(brojRedaka);
         model3.setColumnCount(1);
         model3.fireTableDataChanged();
+        jTabbedPane1.setSelectedIndex(1);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private boolean provjeriUnos(Vector<Vector> v) {
@@ -653,6 +654,7 @@ public class KlijentSwing extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(KlijentSwing.class.getName()).log(Level.SEVERE, null, ex);
         }
+        jTabbedPane1.setSelectedIndex(2);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
@@ -681,6 +683,7 @@ public class KlijentSwing extends javax.swing.JFrame {
         } catch(NumberFormatException nfe) {
             nfe.printStackTrace();
         }
+        jTabbedPane1.setSelectedIndex(3);
     }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
