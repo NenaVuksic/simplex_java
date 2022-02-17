@@ -9,7 +9,7 @@ Upravo iz tog razloga smo odlučile putem ovog projekta realizirati java aplikac
 Simplex metoda je standardna metoda u linearnom programiranju koja se koristi za rješavanje optimizacijskih problema, u pravilu, realiziranih preko jedne funkcije koju optimiziramo te više ograda prikazanih preko nejednadžbi. Algoritam provodimo po koracima na sljedeći način:
 
 - Iz dane zadaće 
-<img src="https://latex.codecogs.com/svg.image?\left\{\begin{matrix}z^{\tau}x\rightarrow&space;\mathrm{max}&space;\\Ax\leq&space;b&space;\\x\geq&space;0\end{matrix}\right." title="\left\{\begin{matrix}z^{\tau}x\rightarrow \mathrm{max} \\Ax\leq b \\x\geq 0\end{matrix}\right." />
+<img src="https://latex.codecogs.com/gif.latex?%5Cbg_white%20%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20z%5E%7B%5Ctau%7D%5Crightarrow%5Cmax%5C%5C%20Ax%5Cle%20b%5C%5C%20x%5Cge%200%20%5Cend%7Bmatrix%7D%5Cright." />
 kreiramo početnu tablicu
 
 |                 | x<sub>1</sub> |      ...      | x<sub>n</sub> |   |
