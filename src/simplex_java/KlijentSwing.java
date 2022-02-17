@@ -134,6 +134,11 @@ public class KlijentSwing extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(855, 597));
         setResizable(false);
         setSize(new java.awt.Dimension(850, 566));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -691,6 +696,16 @@ public class KlijentSwing extends javax.swing.JFrame {
         // TODO add your handling code here:
         jToggleButton3ActionPerformed(evt);
     }//GEN-LAST:event_jToggleButton4ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        zaPoslatiServeru.println("kraj");
+        try {
+            uticnica.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
