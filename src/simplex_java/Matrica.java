@@ -432,7 +432,7 @@ public class Matrica {
             ind.add(i);
         
         ArrayList<ArrayList<Double>> mat1 = copyM(matrica.subList(1,n+1));
-	int rang = mat1.size()
+	int rang = mat1.size();
         if(Gauss(mat1) != rang){
             ok = false;
             for(j = n; j > 0; j--){
