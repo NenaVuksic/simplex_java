@@ -63,7 +63,7 @@ public class KlijentSwing extends javax.swing.JFrame {
 //        jScrollPane3.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
         
         try {
-            uticnica = new Socket("127.0.0.1", 6789);                           //ovdje treba staviti IP adresu i port računala s faksa!!
+            uticnica = new Socket("127.0.0.1", 7777);                           //ovdje treba staviti IP adresu i port računala s faksa!!
         } catch (IOException ex) {
             Logger.getLogger(KlijentSwing.class.getName()).log(Level.SEVERE, null, ex);
         }

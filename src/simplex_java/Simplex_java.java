@@ -13,14 +13,15 @@ import java.util.HashMap;
 import java.sql.*;
 
 /**
- *
- * @author nena
+ * Main klasa. 
+ * @author Nena, Mirna
  */
 public class Simplex_java {
     //static {System.loadLibrary("gjt");}
     static int brojDretvi = 0;
 
     /**
+     * Kreiramo bazu podataka i pokrećemo serversku aplikaciju, te za svakog klijenta stvaramo novu dretvu.
      * @param args the command line arguments
      */
     public static void main(String[] args) {
@@ -100,7 +101,7 @@ public class Simplex_java {
             
             if(konekcija != null) stmt.execute(sql);
             
-            server = new ServerSocket(6789);
+            server = new ServerSocket(7777);
             server.setReuseAddress(true);
             
             while(true) {

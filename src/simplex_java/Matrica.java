@@ -39,9 +39,21 @@ public class Matrica {
      */
     protected ArrayList<Double> tocka;
     
+    /**
+     * veza za pristup bazi podataka 
+     */
     private Connection vezaBazePodataka;
+    /**
+     * redni broj dretve iz koje se stvara ovaj objekt
+     */
     public int idDretve;
+    /**
+     * broj koraka algoritma koji se provodi na objektu
+     */
     private int brojKoraka = 0;
+    /**
+     * kontrolni broj za kreiranje ključne vrijednosti u bazi podataka
+     */
     private int kontrola = 0;
     
     //za linearno programiranje:
@@ -72,9 +84,9 @@ public class Matrica {
      * @param A matrica dimenzija m*n koja definira skup dopustivih točaka x, sa Ax &le; b
      * @param b matrica dimenzija n*1 koja definira skup dopustivih točaka x, sa Ax &le; b
      * @param _z matrica dimenzija 1*m koja reprezentira funkciju cilja 
-     * @param id 
-     * @param conn 
-     * @param ctrl 
+     * @param id redni broj dretve u kojoj se stvara ovaj objekt
+     * @param conn veza za pristup bazi podataka kreiranoj u main klasi
+     * @param ctrl kontrolni broj, služi za stvaranje identifikacijskog broja ovog objekta u bazi podataka
      */
     public Matrica(ArrayList<ArrayList<Double>> A, ArrayList<Double> b, ArrayList<Double> _z, int id, Connection conn, int ctrl) {   //pravim simplex tablicu za zadani problem z^T * x -> max, Ax <= b
         matrica = new ArrayList<>();
@@ -122,6 +134,10 @@ public class Matrica {
         pisiUBazu(matrica);
     }
     
+    /**
+     * stvara novi zapis u bazi podataka, koji se sastoji od jedinstvene oznake, rednog broja dretve iz koje se metoda poziva te stringa koji reprezentira danu matricu u HTML formatu.
+     * @param mat matrica koju želimo zapisati u bazu podataka
+     */
     public void pisiUBazu(ArrayList<ArrayList<Double>> mat){
         String matS = "<html><table style:'border-collapse: collapse; border:1px solid black;'>";
         int velicina = mat.size();
@@ -527,6 +543,10 @@ public class Matrica {
         return v;
     }
 	
+    /**
+     * računa rang matrice A i, ako postoji, sprema njen inverz u bazu podataka.
+     * @return rang matrice A
+     */
     public int rangMatrice(){
     	ArrayList<ArrayList<Double>> matrica1 = copyM(matrica.subList(1, m+1));
         

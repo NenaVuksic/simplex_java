@@ -8,14 +8,13 @@ import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.sql.*;
-import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Mirna
+ * Rukovoditelj pojedinom dretvom koja komunicira s nekim klijentom.
+ * @author Mirna I.
  */
 public class Dretva implements Runnable {
     /**
@@ -23,7 +22,13 @@ public class Dretva implements Runnable {
      */
     private final Socket clientSocket;
     
+    /**
+     * veza za pristup bazi podataka 
+     */
     private Connection vezaBazePodataka;
+    /**
+     * redni broj ove dretve 
+     */
     private int idDretve;
     
     /**
@@ -57,8 +62,8 @@ public class Dretva implements Runnable {
     /**
      * konstruktor za klasu Dretva
      * @param uticnica za mrežnu komunikaciju s klijentom
-     * @param id
-     * @param conn
+     * @param id redni broj dretve
+     * @param conn veza za pristup bazi podataka kreiranoj u main metodi
      */
     public Dretva(Socket uticnica, int id, Connection conn) {
         clientSocket = uticnica;
@@ -247,8 +252,6 @@ public class Dretva implements Runnable {
      * metoda koja uzima tablice iz baze podataka te ih šalje klijentu. Navedene tablice predstavljaju korake u radu implementiranih algoritama.
      */
     private void posaljiKorake() {
-        //ovdje cupamo linije iz baze i saljemo klijentu
-        
         TreeMap<Integer, String> popis = new TreeMap<>();
         String sql = "SELECT id, tablica FROM klijenti  WHERE br_dretve IS " + idDretve;
         
@@ -264,16 +267,5 @@ public class Dretva implements Runnable {
         
         zaPoslati.println(popis.size());
         for(var i : popis.entrySet()) zaPoslati.println(i.getValue());
-        
-        /*
-        //pretpostavljam da ce prvo poslati broj tablica, a onda jednu po jednu tablicu
-        zaPoslati.println(simpleks.povijestMatrice.size() + "");
-        for(var i : simpleks.povijestMatrice) {
-            for(var j : i) {
-                String redak = "";
-                for(var k : j) redak += k.toString() + " ";
-                zaPoslati.println(redak);
-            }
-        }*/
     }
 }
