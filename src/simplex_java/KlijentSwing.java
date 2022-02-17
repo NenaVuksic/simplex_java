@@ -456,13 +456,15 @@ public class KlijentSwing extends javax.swing.JFrame {
 
         jScrollPane4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(114, 81, 177), 1, true));
         jScrollPane4.setPreferredSize(new java.awt.Dimension(295, 333));
+        jScrollPane4.setViewportView(jList1);
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Item 1", "Item 2", "Item 3", " " };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList1.setPreferredSize(new java.awt.Dimension(400, 333));
+        jList1.setMaximumSize(new java.awt.Dimension(500, 10000));
+        jList1.setMinimumSize(new java.awt.Dimension(43, 150));
         jScrollPane4.setViewportView(jList1);
 
         jPanel6.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, 420, 230));
