@@ -107,12 +107,12 @@ public class KlijentSwing extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jToggleButton2 = new javax.swing.JToggleButton();
         jToggleButton3 = new javax.swing.JToggleButton();
@@ -342,11 +342,6 @@ public class KlijentSwing extends javax.swing.JFrame {
         jLabel6.setText("<html><p style=\"text-align:center;\">Molimo unesite podatke:</p></html>");
         jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 230, -1));
 
-        jLabel7.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(114, 81, 181));
-        jLabel7.setText("<html><p style=\"text-align:center;\">&#x2192; max</p></html>");
-        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 100, 94, -1));
-
         jLabel8.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(114, 81, 181));
         jLabel8.setText("<html><p style=\"text-align:center;\">b</p></html>");
@@ -371,6 +366,11 @@ public class KlijentSwing extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(114, 81, 181));
         jLabel12.setText("<html><p style=\"text-align:center;\">*x</p></html>");
         jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 340, 31, -1));
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(114, 81, 181));
+        jLabel18.setText("<html><p style=\"text-align:center;\">&#8594; max</p></html>");
+        jPanel3.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 100, 130, -1));
 
         jTabbedPane1.addTab("tab2", jPanel3);
 
@@ -738,12 +738,12 @@ public class KlijentSwing extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jList1;
