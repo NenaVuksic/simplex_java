@@ -529,9 +529,29 @@ public class Matrica {
 	
     public int rangMatrice(){
     	ArrayList<ArrayList<Double>> matrica1 = copyM(matrica.subList(1, m+1));
-        
+        int rank = m;
+        boolean flag;
+        for(int i=1; i <= n+1; i++)
+        {
+            flag = false;
+            for(int j=1; j <= m+1; j++)
+            {
+                if(matrica.get(i).get(j)!=0 && matrica.get(i).get(0)>n)
+                {
+                    GJT1(i,j);
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag==false)
+            {
+                rank--;
+            }
+        }
+        return rank;
         //ovdje ubaciti račun inverza
+        
         //pisiUBazu(inverz)
-	return Gauss(matrica1);
+	//return Gauss(matrica1);
     }
 }
