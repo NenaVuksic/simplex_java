@@ -548,13 +548,12 @@ public class Matrica {
      * @return rang matrice A
      */
     public int rangMatrice(){
-    	ArrayList<ArrayList<Double>> matrica1 = copyM(matrica.subList(1, m+1));
         int rank = m;
         boolean flag;
-        for(int i=1; i <= n+1; i++)
+        for(int i=1; i < n+1; i++)
         {
             flag = false;
-            for(int j=1; j <= m+1; j++)
+            for(int j=1; j < m+1; j++)
             {
                 if(matrica.get(i).get(j)!=0 && matrica.get(i).get(0)>n)
                 {
@@ -568,10 +567,32 @@ public class Matrica {
                 rank--;
             }
         }
-        return rank;
-        //ovdje ubaciti račun inverza
         
-        //pisiUBazu(inverz)
-	//return Gauss(matrica1);
+        //ovdje ubaciti račun inverza
+        if(n==rank && n==m)
+        {
+            ArrayList<ArrayList<Double>> matricainverz;
+            matricainverz = copyM(matrica);
+            for(int i=1; i<m+1; i++)
+                for(int j=1; j<n+1; j++)
+                {
+                    matricainverz.get((matrica.get(i).get(0))).set((matrica.get(0).get(j)-n), matrica.get(i).get(j));
+                }
+            for(int j=1; j<n+1; j++){
+                matrica.get(0).set(j, (j+n)*1.0);
+            }
+            for(int i=1; i<m+1; i++){
+                matrica.get(i).set(0, i*1.0);
+                
+                for(int j=1; j<n+1; j++)
+                {
+                    matrica.get(i).set(j, matricainverz.get(i).get(j));
+                }
+            }
+                
+        }
+        
+        pisiUBazu(matrica);
+        return rank;
     }
 }
