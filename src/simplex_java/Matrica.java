@@ -278,14 +278,14 @@ public class Matrica {
             boolean br;
             while(true)
             {
-		pom = -1.0;
+		pom = Double.MAX_VALUE;
 		br = true;
 		for(int i = 1; i < n+1; i++) //Provjerava je li matrica vec u optimalnom stanju i trazi najmanji index koji zadovoljava uvjet
 		{
 			if(matrica.get(m + 1).get(i) > 0)
                         {
                             br = false;
-                     	    if(matrica.get(0).get(i) > pom){
+                     	    if(matrica.get(0).get(i) < pom){
                                 pom = matrica.get(0).get(i);       
                                 stupac = i;
                             }
@@ -298,7 +298,7 @@ public class Matrica {
                         return ;
 		 }
 		 stupac = matrica.get(0).indexOf(pom);
-		 pom = -1.0;
+		 pom = Double.MAX_VALUE;
 		 pom_min = Double.MAX_VALUE;
 		 br = true;
 		 for(int i = 1; i < m+1 ; i++) //Provjerava je li funkcija cilja neogranicena i trazi najmanji index koji zadovoljava uvjet
