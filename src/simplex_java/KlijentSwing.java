@@ -112,7 +112,7 @@ public class KlijentSwing extends javax.swing.JFrame {
 
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 60));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Linearno programiranje", "Razdvajajuća hiperravnina" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Linearno programiranje", "Razdvajajuća hiperravnina", "Rang matrice" }));
         jComboBox1.setPreferredSize(new java.awt.Dimension(200, 40));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -380,7 +380,8 @@ public class KlijentSwing extends javax.swing.JFrame {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         if("Linearno programiranje".equals(jComboBox1.getSelectedItem().toString())) izbor = 1;
-        else izbor = 2;
+        else if("Razdvajajuća hiperravnina".equals(jComboBox1.getSelectedItem().toString())) izbor = 2;
+        else izbor = 3;
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
@@ -399,8 +400,6 @@ public class KlijentSwing extends javax.swing.JFrame {
         model1.setRowCount(brojRedaka);
         model1.setColumnCount(brojStupaca);
         model1.fireTableDataChanged();
-        
-        System.out.println(model1.getDataVector());
         
         model2.getDataVector().removeAllElements();
         model2.setRowCount(1);
@@ -447,7 +446,6 @@ public class KlijentSwing extends javax.swing.JFrame {
         if(izbor == 1) {    
             zaPoslatiServeru.println("b");
             String bTekst = "";
-            System.out.println(model3.getDataVector());
             for(var i : model3.getDataVector()) {
                 for(var j : i) {
                     bTekst += j.toString() + " ";
@@ -533,43 +531,7 @@ public class KlijentSwing extends javax.swing.JFrame {
         try {
             String line = primljenoOdServera.readLine();
             int brojTablica = Integer.parseInt(line);
-            for(int i = 0; i < brojTablica; i++) {
-                String tablica = "<html><table style:'border-collapse: collapse; border:1px solid black;'>";
-                for(int j = 0; j < brojRedaka + 2; j++) {       //brojRedaka je ovdje broj redaka od A, a ne cijele tablice
-                    //parsiram dobivenu liniju - pretpostavljam da će biti u obliku "broj broj broj ... broj"
-                    tablica += "<tr>";
-                    
-                    line = primljenoOdServera.readLine();
-                    String redak[] = line.split(" ");
-                    /*
-                    if(j == 0 || j == brojRedaka + 1) tablica += "<td> </td>";    //prvi i zadnji redak na prvom mjestu imaju prazno polje
-                    else tablica += "<td>x<sub>" + ((int) Double.parseDouble(redak[0])) + "</sub></td>";    //srednji retci na prvom mjestu imaju varijable
-                    
-                    for(int k = 1; k < redak.length; k++) {
-                        if(j == 0) {
-                            if(k == redak.length - 1) tablica += "<td> </td>";
-                            else tablica += "<td>x<sub>" + ((int) Double.parseDouble(redak[k])) + "</sub></td>";
-                        }
-                        else tablica += "<td>" + redak[k] + "</td>";
-                    }
-                    */
-                    for(int k = 0; k < redak.length; k++) {
-                        if(redak[k].equals("Double.NaN") || redak[k].equals("NaN")) {
-                            tablica += "<td> </td>";
-                            continue;
-                        }
-                        if(j == 0) tablica += "<td>x<sub>" + ((int) Double.parseDouble(redak[k])) + "</sub></td>";
-                        else {
-                            if(k == 0) tablica += "<td>x<sub>" + ((int) Double.parseDouble(redak[0])) + "</sub></td>";
-                            else tablica += "<td>" + redak[k] + "</td>";
-                        }
-                    }
-                    
-                    tablica += "</tr>";
-                }
-                tablica += "</table></html>";
-                listData.add(tablica);
-            }
+            for(int i = 0; i < brojTablica; i++) listData.add(primljenoOdServera.readLine());
             
             jList1.setListData(listData);
         } catch (IOException ex) {

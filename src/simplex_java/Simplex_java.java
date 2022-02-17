@@ -10,22 +10,22 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.sql.*;
 
 /**
  *
  * @author nena
  */
 public class Simplex_java {
-    static {System.loadLibrary("gjt");}
-    static HashMap<Integer, ArrayList<String>> mapa = new HashMap<>();
-    static int brojac = 0;
+    //static {System.loadLibrary("gjt");}
+    static int brojDretvi = 0;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        ArrayList<Double> redA = new ArrayList<>();         //redak
+        /*ArrayList<Double> redA = new ArrayList<>();         //redak
         ArrayList<ArrayList<Double>> A = new ArrayList<>(); //matrica
         
         //punim prvi redak:
@@ -81,35 +81,40 @@ public class Simplex_java {
         for(var i : pov) {
             /*for(var j : i) {
                 System.out.println(j);
-            }*/
+            }
             System.out.println(i);
             System.out.println("");
-        }
+        }*/
+        
+        String url = "jdbc:sqlite:baza.db";
+        String sql = "CREATE TABLE IF NOT EXISTS klijenti (\n"
+                        + "id integer PRIMARY KEY, \n"     //ID ce biti konkatenirano( broj dretve + broj koraka ) - to će nam dati neki jedinstveni ID
+                        + "br_dretve ,\n"
+                        + "tablica text );";
         
         ServerSocket server = null;
+        
         try {
-            server = new ServerSocket(6799);
+            Connection konekcija = DriverManager.getConnection(url); 
+            Statement stmt = konekcija.createStatement();
+            
+            if(konekcija != null) stmt.execute(sql);
+            
+            server = new ServerSocket(6789);
             server.setReuseAddress(true);
             
             while(true) {
                 Socket klijent = server.accept();
                 System.out.println("novi klijent: " + klijent.getInetAddress().getHostAddress());
-                int id = brojac;
-                if(brojac != 0){
-                    for(int i = 0; i < brojac; i++)
-                        if(!mapa.containsKey(i)){
-                            id = i;
-                            break;
-                        }
-                }
-                Dretva novaDretva = new Dretva(klijent, id);
-                mapa.put(id, new ArrayList<>());
-                brojac = Collections.max(mapa.keySet()) + 1;
+                Dretva novaDretva = new Dretva(klijent, brojDretvi++, konekcija);
                 new Thread(novaDretva).start();
             }
         }
         catch(IOException e) {
             e.printStackTrace();
+        }
+        catch (SQLException s) {
+            s.printStackTrace();
         }
         finally {
             if(server != null) {

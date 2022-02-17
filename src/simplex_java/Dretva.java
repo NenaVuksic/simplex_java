@@ -7,6 +7,11 @@ package simplex_java;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,7 +22,9 @@ public class Dretva implements Runnable {
      * utičnica za komunikaciju s klijentom
      */
     private final Socket clientSocket;
-    int ID;
+    
+    private Connection vezaBazePodataka;
+    private int idDretve;
     
     /**
      * matrica A u zadaći linearnog programiranja Ax &le; b, ili cijela potrebna matrica za algoritam za razdvajajuću hiperravninu. Podaci u ovom polju zaprimaju se od klijenta.
@@ -45,13 +52,19 @@ public class Dretva implements Runnable {
      */
     private Matrica simpleks;
     
+    private int kontrola;       //služi za stvaranje jedinstvenog ID-ja u bazi podataka
+    
     /**
      * konstruktor za klasu Dretva
      * @param uticnica za mrežnu komunikaciju s klijentom
+     * @param id
+     * @param conn
      */
-    public Dretva(Socket uticnica, int id) {
+    public Dretva(Socket uticnica, int id, Connection conn) {
         clientSocket = uticnica;
-        ID = id;
+        idDretve = id;
+        vezaBazePodataka = conn;
+        kontrola = 0;
     }
     
     @Override public void run() {
@@ -59,6 +72,10 @@ public class Dretva implements Runnable {
             zaPoslati = new PrintWriter(clientSocket.getOutputStream(), true);
             primljenoOdKlijenta = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             while(true) {
+                A = new ArrayList<>();
+                b = new ArrayList<>();
+                z = new ArrayList<>();
+                
                 String line = primljenoOdKlijenta.readLine();
                 if(line.equals("kraj")) break;
                 if(line.equals("poslati korake")) {
@@ -177,7 +194,7 @@ public class Dretva implements Runnable {
                     if(procitanPosalji) continue;
                 }
                 
-                simpleks = new Matrica(A, b, z, ID);
+                simpleks = new Matrica(A, b, z, idDretve, vezaBazePodataka, ++kontrola);
                 
                 if(izbor == 1) {
                     simpleks.prviPlan();
@@ -226,6 +243,23 @@ public class Dretva implements Runnable {
     private void posaljiKorake() {
         //ovdje cupamo linije iz baze i saljemo klijentu
         
+        TreeMap<Integer, String> popis = new TreeMap<>();
+        String sql = "SELECT id, tablica FROM klijenti  WHERE br_dretve IS " + idDretve;
+        
+        try {
+            Statement stmt = vezaBazePodataka.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+                popis.put(rs.getInt("id"), rs.getString("tablica"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Dretva.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        zaPoslati.println(popis.size());
+        for(var i : popis.entrySet()) zaPoslati.println(i.getValue());
+        
+        /*
         //pretpostavljam da ce prvo poslati broj tablica, a onda jednu po jednu tablicu
         zaPoslati.println(simpleks.povijestMatrice.size() + "");
         for(var i : simpleks.povijestMatrice) {
@@ -234,6 +268,6 @@ public class Dretva implements Runnable {
                 for(var k : j) redak += k.toString() + " ";
                 zaPoslati.println(redak);
             }
-        }
+        }*/
     }
 }

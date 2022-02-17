@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package simplex_java;
-import java.io.*;
+import java.sql.*;
 import java.util.*;
 
 /**
@@ -38,7 +38,11 @@ public class Matrica {
      * ovo polje reprezentira jedan od vrhova politopa zadanog s Ax &le; b.
      */
     protected ArrayList<Double> tocka;
+    
+    private Connection vezaBazePodataka;
     public int idDretve;
+    private int brojKoraka = 0;
+    private int kontrola = 0;
     
     //za linearno programiranje:
     /**
@@ -69,7 +73,7 @@ public class Matrica {
      * @param b matrica dimenzija n*1 koja definira skup dopustivih točaka x, sa Ax &le; b
      * @param _z matrica dimenzija 1*m koja reprezentira funkciju cilja 
      */
-    public Matrica(ArrayList<ArrayList<Double>> A, ArrayList<Double> b, ArrayList<Double> _z, int id) {   //pravim simplex tablicu za zadani problem z^T * x -> max, Ax <= b
+    public Matrica(ArrayList<ArrayList<Double>> A, ArrayList<Double> b, ArrayList<Double> _z, int id, Connection conn, int ctrl) {   //pravim simplex tablicu za zadani problem z^T * x -> max, Ax <= b
         matrica = new ArrayList<>();
         m = A.size();
         n = A.get(0).size();
@@ -109,15 +113,42 @@ public class Matrica {
         matrica.add(noviRedak);
         
         idDretve = id;
+        vezaBazePodataka = conn;
+        kontrola = ctrl;
         //povijestMatrice.add(matrica);
         pisiUBazu(matrica);
     }
     
     public void pisiUBazu(ArrayList<ArrayList<Double>> mat){
-        String matS = "";
-        matS += mat.get(1).get(1).toString();
-        //matS = mat.toString();
-        Simplex_java.mapa.get(idDretve).add(matS);
+        String matS = "<html><table style:'border-collapse: collapse; border:1px solid black;'>";
+        int velicina = mat.size();
+        for(int i = 0; i < velicina; i++) {
+            matS += "<tr>";
+            int br = mat.get(i).size();
+            for(int j = 0; j < br; j++) {
+                if(mat.get(i).get(j).isNaN()) {
+                    matS += "<td> </td>";
+                    continue;
+                }
+                else if(i == 0 || j == 0) matS += "<td>x<sub>" + mat.get(i).get(j).intValue() + "</sub></td>";
+                else matS += "<td>" + mat.get(i).get(j) + "</td>";
+            }
+            matS += "</tr>";
+        }
+        matS += "</table></html>";
+        
+        String sql = "INSERT INTO klijenti(id,br_dretve,tablica) VALUES(?,?,?)";
+        try {
+            PreparedStatement pstmt = vezaBazePodataka.prepareStatement(sql);
+            pstmt.setInt(1, Integer.parseInt(idDretve + "" + (brojKoraka++) + (++kontrola)));
+            pstmt.setInt(2, idDretve);
+            pstmt.setString(3, matS);
+            pstmt.executeUpdate();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } catch(NumberFormatException n) {
+            n.printStackTrace();
+        }
     }
     
     /**
@@ -271,12 +302,13 @@ public class Matrica {
                         neogranicenaFunkcijaCilja = true;
                         return ;
 		  }
-//		  GJT1(redak, stupac);
+		  GJT1(redak, stupac);
+                  pisiUBazu(matrica);
 //                  povijestMatrice.add(matrica);
-		  final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, redak, stupac);
-		  //povijestMatrice.add(matrica1);
-                  pisiUBazu(matrica1);
-		  matrica = copyM(matrica1);
+//		  final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, redak, stupac);
+//		  //povijestMatrice.add(matrica1);
+//                  pisiUBazu(matrica1);
+//		  matrica = copyM(matrica1);
         }
     	//return ;
     }    
@@ -314,12 +346,13 @@ public class Matrica {
                 zadacaUKontradikciji = true;
             }
             else {
-//                GJT1(r, s);
-//                povijestMatrice.add(matrica);
-		final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, r, s);
+                GJT1(r, s);
+                povijestMatrice.add(matrica);
+                pisiUBazu(matrica);
+//		final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, r, s);
                 //povijestMatrice.add(matrica1);
-                pisiUBazu(matrica1);
-		matrica = copyM(matrica1);
+//                pisiUBazu(matrica1);
+//		matrica = copyM(matrica1);
                 prviPlan();
             }
         }  
@@ -430,14 +463,15 @@ public class Matrica {
             for(j = 0; j < ind.size(); j++){
                 if(matrica.get(ind.get(j)).get(i) != 0.0)
                     break;}
-//            GJT1(ind.get(j),i);
-	    final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, ind.get(j), i);
+            GJT1(ind.get(j),i);
+	    //final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, ind.get(j), i);
             ind2.add(ind.get(j));
             ind.remove(j);
 //            povijestMatrice.add(matrica);
 	    //povijestMatrice.add(matrica1);
-            pisiUBazu(matrica1);
-	    matrica = copyM(matrica1);
+            pisiUBazu(matrica);
+//            pisiUBazu(matrica1);
+//	    matrica = copyM(matrica1);
         }
         for(i = 1; i < n+1; i++){
             Collections.swap(matrica, ind2.get(i-1), i);
@@ -477,12 +511,13 @@ public class Matrica {
             }
             
             // k vec imamo
-//            GJT1(k, l);
+            GJT1(k, l);
+            pisiUBazu(matrica);
 //            povijestMatrice.add(matrica);
-            final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, k, l);
-            //povijestMatrice.add(matrica1);
-            pisiUBazu(matrica1);
-	    matrica = copyM(matrica1);
+//            final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, k, l);
+//            //povijestMatrice.add(matrica1);
+//            pisiUBazu(matrica1);
+//	    matrica = copyM(matrica1);
         }
         return v;
     }
