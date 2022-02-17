@@ -502,7 +502,7 @@ public class KlijentSwing extends javax.swing.JFrame {
                 jToggleButton4ActionPerformed(evt);
             }
         });
-        jPanel6.add(jToggleButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 400, 144, 50));
+        jPanel6.add(jToggleButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 410, 144, 50));
 
         jTabbedPane1.addTab("tab4", jPanel6);
 
@@ -682,6 +682,11 @@ public class KlijentSwing extends javax.swing.JFrame {
             nfe.printStackTrace();
         }
     }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
+        // TODO add your handling code here:
+        jToggleButton3ActionPerformed(evt);
+    }//GEN-LAST:event_jToggleButton4ActionPerformed
 
     /**
      * @param args the command line arguments
