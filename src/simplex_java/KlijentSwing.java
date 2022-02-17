@@ -435,7 +435,8 @@ public class KlijentSwing extends javax.swing.JFrame {
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         boolean provjera1 = provjeriUnos(model1.getDataVector());
-        boolean provjera2 = provjeriUnos(model2.getDataVector());
+        boolean provjera2 = true;
+        if(izbor != 3) provjera2 = provjeriUnos(model2.getDataVector());        //z se provjerava samo ako radimo linprog ili razdvajajucu hiper.
         boolean provjera3 = true;
         if(izbor == 1) provjera3 = provjeriUnos(model3.getDataVector());        //b se provjerava samo ako radimo linprog
         
@@ -454,15 +455,17 @@ public class KlijentSwing extends javax.swing.JFrame {
             zaPoslatiServeru.println(bTekst);
         }
         
-        zaPoslatiServeru.println("z");
-        String zTekst = "";
-        for(var i : model2.getDataVector()) {
-            for(var j : i) {
-                zTekst += j.toString() + " ";
+        if(izbor != 3) {
+            zaPoslatiServeru.println("z");
+            String zTekst = "";
+            for(var i : model2.getDataVector()) {
+                for(var j : i) {
+                    zTekst += j.toString() + " ";
+                }
             }
-        }
-        zaPoslatiServeru.println(zTekst);
-        
+            zaPoslatiServeru.println(zTekst);
+        }    
+            
         zaPoslatiServeru.println("A");
         for(var i: model1.getDataVector()) {
             String ATekst = "";
@@ -506,6 +509,9 @@ public class KlijentSwing extends javax.swing.JFrame {
                     ispis += vektor[vektor.length - 1] + "].";
                     jTextArea1.setText(ispis);
                 }
+            }
+            else if(izbor == 3) {
+                jTextArea1.setText("Rang matrice je " + line + ".");
             }
             
         } catch (IOException ex) {

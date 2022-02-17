@@ -121,34 +121,37 @@ public class Dretva implements Runnable {
                 else for(int i = 0; i < brojRedaka; i++) b.add(Double.NaN);  //da b ne bude null pri kreiranju matrice na kojoj pozivamo algoritam za razdvajajuću hiperravninu
 
                 //onda stiže z:
-                line = primljenoOdKlijenta.readLine();
-                if(line.equals("kraj")) break;
-                if(line.equals("poslati korake")) {
-                    posaljiKorake();
-                    continue;
-                }
-                if("z".equals(line)) {
+                if(izbor != 3) {
                     line = primljenoOdKlijenta.readLine();
                     if(line.equals("kraj")) break;
                     if(line.equals("poslati korake")) {
                         posaljiKorake();
                         continue;
                     }
-                    String zTekst[] = line.split(" ");
-                    for(int i = 0; i < zTekst.length; i++) {
-                        double novi = Double.NaN;
-                        try{
-                            novi = Double.parseDouble(zTekst[i]);
-                        } catch(NumberFormatException nfe1) {
-                            try {
-                                novi = (double) Integer.parseInt(zTekst[i]);
-                            } catch(NumberFormatException nfe2) {
-                                nfe2.printStackTrace();
-                            }
+                    if("z".equals(line)) {
+                        line = primljenoOdKlijenta.readLine();
+                        if(line.equals("kraj")) break;
+                        if(line.equals("poslati korake")) {
+                            posaljiKorake();
+                            continue;
                         }
-                        z.add(novi);
+                        String zTekst[] = line.split(" ");
+                        for(int i = 0; i < zTekst.length; i++) {
+                            double novi = Double.NaN;
+                            try{
+                                novi = Double.parseDouble(zTekst[i]);
+                            } catch(NumberFormatException nfe1) {
+                                try {
+                                    novi = (double) Integer.parseInt(zTekst[i]);
+                                } catch(NumberFormatException nfe2) {
+                                    nfe2.printStackTrace();
+                                }
+                            }
+                            z.add(novi);
+                        }
                     }
                 }
+                else for(int i = 0; i < brojStupaca; i++) z.add(Double.NaN);  //da z ne bude null pri kreiranju matrice na kojoj pozivamo algoritam za rang matrice
                 
                 //i onda A, redak po redak:
                 line = primljenoOdKlijenta.readLine();
@@ -202,7 +205,7 @@ public class Dretva implements Runnable {
                     else if(simpleks.neogranicenaFunkcijaCilja) zaPoslati.println("neogranicena fja");
                     else {
                         String temp = "";
-                        for(var i : simpleks.tocka()) temp += i.toString() + " ";     //metodu vrijednostFjeCilja mozemo preraditi da vraca ovu tocku.
+                        for(var i : simpleks.tocka()) temp += i.toString() + " ";     
                         zaPoslati.println(temp);
                         zaPoslati.println(simpleks.vrijednostFunkcijeCilja());
                     }
@@ -217,6 +220,9 @@ public class Dretva implements Runnable {
                         for(var i : rez) temp += i.toString() + " ";
                         zaPoslati.println(temp);
                     }
+                }
+                else if(izbor == 3) {
+                    zaPoslati.println(simpleks.rangMatrice() + "");
                 }
             }
         }

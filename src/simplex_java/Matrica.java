@@ -72,6 +72,9 @@ public class Matrica {
      * @param A matrica dimenzija m*n koja definira skup dopustivih točaka x, sa Ax &le; b
      * @param b matrica dimenzija n*1 koja definira skup dopustivih točaka x, sa Ax &le; b
      * @param _z matrica dimenzija 1*m koja reprezentira funkciju cilja 
+     * @param id 
+     * @param conn 
+     * @param ctrl 
      */
     public Matrica(ArrayList<ArrayList<Double>> A, ArrayList<Double> b, ArrayList<Double> _z, int id, Connection conn, int ctrl) {   //pravim simplex tablicu za zadani problem z^T * x -> max, Ax <= b
         matrica = new ArrayList<>();
@@ -347,7 +350,7 @@ public class Matrica {
             }
             else {
                 GJT1(r, s);
-                povijestMatrice.add(matrica);
+                //povijestMatrice.add(matrica);
                 pisiUBazu(matrica);
 //		final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, r, s);
                 //povijestMatrice.add(matrica1);
@@ -526,6 +529,9 @@ public class Matrica {
 	
     public int rangMatrice(){
     	ArrayList<ArrayList<Double>> matrica1 = copyM(matrica.subList(1, m+1));
+        
+        //ovdje ubaciti račun inverza
+        //pisiUBazu(inverz)
 	return Gauss(matrica1);
     }
 }
