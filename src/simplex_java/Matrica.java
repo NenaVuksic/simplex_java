@@ -576,7 +576,9 @@ public class Matrica {
             for(int i=1; i<m+1; i++)
                 for(int j=1; j<n+1; j++)
                 {
-                    matricainverz.get((matrica.get(i).get(0))).set((matrica.get(0).get(j).intValue()-n), matrica.get(i).get(j));
+                    Double temp = matrica.get(0).get(j);
+                    int temp2 = temp.intValue() - n;
+                    matricainverz.get((matrica.get(i).get(0)).intValue()).set(temp2, matrica.get(i).get(j));
                 }
             for(int j=1; j<n+1; j++){
                 matrica.get(0).set(j, (j+n)*1.0);
