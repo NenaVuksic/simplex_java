@@ -11,16 +11,16 @@ Simplex metoda je standardna metoda u linearnom programiranju koja se koristi za
 - Iz dane zadaće 
 <img src="https://latex.codecogs.com/svg.image?\left\{\begin{matrix}z^{\tau}x\rightarrow&space;\mathrm{max}&space;\\Ax\leq&space;b&space;\\x\geq&space;0\end{matrix}\right." title="\left\{\begin{matrix}z^{\tau}x\rightarrow \mathrm{max} \\Ax\leq b \\x\geq 0\end{matrix}\right." />
 kreiramo početnu tablicu
+
 |                 | x<sub>1</sub> |      ...      | x<sub>n</sub> |   |
 |:---------------:|:-------------:|:-------------:|:-------------:|:-:|
 | x<sub>n+1</sub> |               |               |               |   |
 |       ...       |               |       -A      |               | b |
 | x<sub>n+m</sub> |               |               |               |   |
-|:---------------:|:-------------:|:-------------:|:-------------:|:-:|
 |                 |               | z<sup>T</sup> |               | 0 |
 
 
--Zatim, ovisno o vrsti problema kojeg rješavamo, primjenjujemo algoritme za
+- Zatim, ovisno o vrsti problema kojeg rješavamo, primjenjujemo algoritme za
   + Prvi plan
   + Optimalni plan
   + Razdvajajuću hiperravninu
