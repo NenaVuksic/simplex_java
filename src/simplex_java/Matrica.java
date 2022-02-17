@@ -523,4 +523,9 @@ public class Matrica {
         }
         return v;
     }
+	
+    public int rangMatrice(){
+    	ArrayList<ArrayList<Double>> matrica1 = copyM(matrica.subList(1, m+1));
+	return Gauss(matrica1);
+    }
 }
