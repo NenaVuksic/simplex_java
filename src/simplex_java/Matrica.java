@@ -337,26 +337,25 @@ public class Matrica {
      */
     public void prviPlan() {
         int flag = 0, r = 0, temp = 0;
+        ArrayList<Integer> kandidatiRedak = new ArrayList<>(), kandidatiStupac = new ArrayList<>();
         for(var i : matrica) {
             if(temp > 0 && temp < m + 1 && i.get(n + 1) < 0) {
-                r = temp;
+                kandidatiRedak.add(temp);
                 flag = 1;
-                break;
             }
             temp++;
         }
         
         if(flag == 0) optimalniPlan();
         else {
+            r = Collections.min(kandidatiRedak);
             flag = 0;
             int s = 0;
             temp = 0;
             for(var i : matrica.get(r)) {
                 if(i > 0 && temp > 0 && temp < n + 1) {
-                    //s = matrica.get(r).indexOf(i);
-                    s = temp;
+                    kandidatiStupac.add(temp);
                     flag = 1;
-                    break;
                 }
                 temp++;
             }
@@ -365,6 +364,7 @@ public class Matrica {
                 zadacaUKontradikciji = true;
             }
             else {
+                s = Collections.min(kandidatiStupac);
                 GJT1(r, s);
                 //povijestMatrice.add(matrica);
                 pisiUBazu(matrica);

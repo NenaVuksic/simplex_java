@@ -98,10 +98,10 @@ public class Simplex_java {
         try {
             konekcija = DriverManager.getConnection(url); 
             Statement stmt = konekcija.createStatement();
+                        
+            stmt.execute(sql);
             
             stmt.execute("DELETE FROM klijenti ;");
-            
-            stmt.execute(sql);
             
             server = new ServerSocket(7777);
             server.setReuseAddress(true);
