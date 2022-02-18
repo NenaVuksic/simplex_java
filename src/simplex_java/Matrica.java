@@ -474,6 +474,7 @@ public class Matrica {
                 if(matrica.get(j).get(i)!=0 && matrica.get(j).get(0)>n)
                 {
                     matrica = GJT(matrica, j, i);
+                    pisiUBazu(matrica);
                     flag = true;
                     break;
                 }
