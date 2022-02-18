@@ -5,10 +5,10 @@
 package simplex_java;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -48,68 +48,32 @@ public class MatricaTest {
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(MatricaTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        sql = "DELETE FROM klijenti WHERE br_dretve IS 101";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            sql = "DELETE FROM klijenti WHERE br_dretve IS 101";
+            pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(MatricaTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        sql = "DELETE FROM klijenti WHERE br_dretve IS 102";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            sql = "DELETE FROM klijenti WHERE br_dretve IS 102";
+            pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(MatricaTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        sql = "DELETE FROM klijenti WHERE br_dretve IS 103";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            sql = "DELETE FROM klijenti WHERE br_dretve IS 103";
+            pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(MatricaTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        sql = "DELETE FROM klijenti WHERE br_dretve IS 104";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            sql = "DELETE FROM klijenti WHERE br_dretve IS 104";
+            pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(MatricaTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        sql = "DELETE FROM klijenti WHERE br_dretve IS 105";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            sql = "DELETE FROM klijenti WHERE br_dretve IS 105";
+            pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(MatricaTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        sql = "DELETE FROM klijenti WHERE br_dretve IS 106";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            sql = "DELETE FROM klijenti WHERE br_dretve IS 106";
+            pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(MatricaTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        sql = "DELETE FROM klijenti WHERE br_dretve IS 107";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            sql = "DELETE FROM klijenti WHERE br_dretve IS 107";
+            pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(MatricaTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        sql = "DELETE FROM klijenti WHERE br_dretve IS 108";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            sql = "DELETE FROM klijenti WHERE br_dretve IS 108";
+            pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(MatricaTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        sql = "DELETE FROM klijenti WHERE br_dretve IS 109";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            sql = "DELETE FROM klijenti WHERE br_dretve IS 109";
+            pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(MatricaTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,7 +87,7 @@ public class MatricaTest {
     @After
     public void tearDown() {
     }
-
+    
     /**
      * Test of pisiUBazu method, of class Matrica.
      */
@@ -223,20 +187,6 @@ public class MatricaTest {
         instance.prviPlan();
         ArrayList<Double> result = instance.tocka();
         assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of GJT1 method, of class Matrica.
-     */
-    @Test
-    public void testGJT1() {
-        System.out.println("GJT1");
-        int redak = 0;
-        int stupac = 0;
-        Matrica instance = null;
-        instance.GJT1(redak, stupac);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -455,5 +405,4 @@ public class MatricaTest {
         int result = instance.rangMatrice();
         assertEquals(expResult, result);
     }
-    
 }

@@ -4,6 +4,7 @@
  */
 package simplex_java;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -130,7 +131,6 @@ public class Matrica {
         idDretve = id;
         vezaBazePodataka = conn;
         kontrola = ctrl;
-        //povijestMatrice.add(matrica);
         pisiUBazu(matrica);
     }
     
@@ -140,6 +140,7 @@ public class Matrica {
      */
     public synchronized void pisiUBazu(ArrayList<ArrayList<Double>> mat){
         String matS = "<html><table style:'border-collapse: collapse; border:1px solid black;'>";
+        DecimalFormat df = new DecimalFormat("#.####");
         int velicina = mat.size();
         for(int i = 0; i < velicina; i++) {
             matS += "<tr>";
@@ -150,7 +151,7 @@ public class Matrica {
                     continue;
                 }
                 else if(i == 0 || j == 0) matS += "<td>x<sub>" + mat.get(i).get(j).intValue() + "</sub></td>";
-                else matS += "<td>" + mat.get(i).get(j) + "</td>";
+                else matS += "<td>" + df.format(mat.get(i).get(j).doubleValue()) + "</td>";
             }
             matS += "</tr>";
         }
@@ -176,7 +177,7 @@ public class Matrica {
      * @return vrijednost funkcije cilja 
      */
     public double vrijednostFunkcijeCilja() {
-        return matrica.get(m + 1).get(n + 1);       //s obzirom da Kristinin GJT sadrži vrijednost fje cilja u tablici, možemo ovak
+        return matrica.get(m + 1).get(n + 1);
     }
     
     /**
@@ -196,67 +197,6 @@ public class Matrica {
             brojac++;
         }
         return tocka;           
-    }
-    
-    /**
-     * Ova metoda obavlja Gauss-Jordanovu transformaciju simplex tablice na danim koordinatama.
-     * 
-     * @param redak redni broj retka u kojem je ključni element transformacije
-     * @param stupac redni broj stupca u kojem je ključni element transformacije
-     */
-    public void GJT1(int redak, int stupac){         //transformacija na mjestu(redak, stupac) u matrici
-        double elem = matrica.get(redak).get(stupac);       //kljucni element
-        ArrayList<ArrayList<Double>> novaMatrica = new ArrayList<>();        
-        ArrayList<Double> noviRedak = new ArrayList<>();
-        
-        noviRedak.addAll(matrica.get(0));                   //kreiram prvi redak mtrice, koji se sastoji od indekasa varijabli
-        noviRedak.set(stupac, matrica.get(redak).get(0));
-        novaMatrica.add(noviRedak);
-        
-        int r = 0;
-        for(var i : matrica) {                              //ovdje preskacem prvi redak jer u njemu nemam sta racunat
-            if(r == 0) {
-                r++;
-                continue;
-            }
-            noviRedak = new ArrayList<>();
-            if(r == redak) noviRedak.add(matrica.get(0).get(stupac));//u kljucnom retku na nultom mjestu je indeks varijable koja je prije bila u bazi
-            else noviRedak.add(i.get(0));                            //inače samo prepišemo broj varijable od prije
-            int s = 0;
-            for(var j : i) {
-                if(s == 0) {
-                    s++;
-                    continue;
-                }
-                if(r == redak) {
-                    if(s == stupac){
-                        noviRedak.add(1 / elem);
-                    }
-                    else {
-                        //System.out.println("dodajem "+ -j/elem);
-                        noviRedak.add(- j / elem);
-                    }
-                }
-                else {
-                    if(r == m + 1 && s == n + 1) {
-                        noviRedak.add(vrijednostFunkcijeCilja());      //ovdje treba dodati vrijednost funkcije cilja!
-                        break;
-                    }
-                    if(s == stupac) {
-                        noviRedak.add(j / elem);
-                    }
-                    else {
-                        noviRedak.add((j * elem - i.get(stupac) * matrica.get(redak).get(s)) / elem);
-                        //System.out.println("dodajem " + (j * elem - i.get(stupac) * matrica.get(redak).get(s)) / elem);
-                    }
-                }
-                s++;
-            }
-            novaMatrica.add(noviRedak);
-            r++;
-        }
-        
-        matrica = novaMatrica;
     }
     
     /**
@@ -303,7 +243,6 @@ public class Matrica {
 		 br = true;
 		 for(int i = 1; i < m+1 ; i++) //Provjerava je li funkcija cilja neogranicena i trazi najmanji index koji zadovoljava uvjet
 		 {      
-                        //System.out.println("pokušavam vidjet element na mjestu " + i + ", " + stupac);
                         if(matrica.get(i).get(stupac) < 0)
                         {
                             br = false;
@@ -321,15 +260,9 @@ public class Matrica {
                         neogranicenaFunkcijaCilja = true;
                         return ;
 		  }
-		  GJT1(redak, stupac);
-                  pisiUBazu(matrica);
-//                  povijestMatrice.add(matrica);
-//		  final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, redak, stupac);
-//		  //povijestMatrice.add(matrica1);
-//                  pisiUBazu(matrica1);
-//		  matrica = copyM(matrica1);
+                  matrica = GJT(matrica, redak, stupac);
+                  pisiUBazu(matrica);;
         }
-    	//return ;
     }    
     
     /**
@@ -365,20 +298,14 @@ public class Matrica {
             }
             else {
                 s = Collections.min(kandidatiStupac);
-                GJT1(r, s);
-                //povijestMatrice.add(matrica);
+                matrica = GJT(matrica, r, s);
                 pisiUBazu(matrica);
-//		final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, r, s);
-                //povijestMatrice.add(matrica1);
-//                pisiUBazu(matrica1);
-//		matrica = copyM(matrica1);
                 prviPlan();
             }
         }  
         
     }
     
-    //za provjeru lin. nezavisnosti - Gaussove eliminacije
     /**
      * Racuna rang matrice Gaussovim eliminacijama.
      * @param mat simplex tablica 
@@ -418,7 +345,6 @@ public class Matrica {
         return r1;
     }
     
-    //copy matrice
     /**
      * 
      * @param mat matrica koju kopiramo
@@ -484,15 +410,10 @@ public class Matrica {
             for(j = 0; j < ind.size(); j++){
                 if(matrica.get(ind.get(j)).get(i) != 0.0)
                     break;}
-            GJT1(ind.get(j),i);
-	    //final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, ind.get(j), i);
+            matrica = GJT(matrica, ind.get(j), i);
             ind2.add(ind.get(j));
             ind.remove(j);
-//            povijestMatrice.add(matrica);
-	    //povijestMatrice.add(matrica1);
             pisiUBazu(matrica);
-//            pisiUBazu(matrica1);
-//	    matrica = copyM(matrica1);
         }
         for(i = 1; i < n+1; i++){
             Collections.swap(matrica, ind2.get(i-1), i);
@@ -532,13 +453,8 @@ public class Matrica {
             }
             
             // k vec imamo
-            GJT1(k, l);
+            matrica = GJT(matrica, k, l);
             pisiUBazu(matrica);
-//            povijestMatrice.add(matrica);
-//            final ArrayList<ArrayList<Double>> matrica1 = GJT(matrica, k, l);
-//            //povijestMatrice.add(matrica1);
-//            pisiUBazu(matrica1);
-//	    matrica = copyM(matrica1);
         }
         return v;
     }
@@ -557,7 +473,7 @@ public class Matrica {
             {
                 if(matrica.get(j).get(i)!=0 && matrica.get(j).get(0)>n)
                 {
-                    GJT1(j,i);
+                    matrica = GJT(matrica, j, i);
                     flag = true;
                     break;
                 }
@@ -568,7 +484,6 @@ public class Matrica {
             }
         }
         
-        //ovdje ubaciti račun inverza
         if(n==rank && n==m)
         {
             ArrayList<ArrayList<Double>> matricainverz;

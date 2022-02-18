@@ -8,6 +8,7 @@ import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,8 +57,10 @@ public class Dretva implements Runnable {
      * instanca klase Matrica nad kojom klijent želi odraditi operacije
      */
     private Matrica simpleks;
-    
-    private int kontrola;       //služi za stvaranje jedinstvenog ID-ja u bazi podataka
+    /**
+     * pomoćni int za stvaranje jedinstvenog ID-ja u bazi podataka
+     */
+    private int kontrola;
     
     /**
      * konstruktor za klasu Dretva
@@ -72,6 +75,9 @@ public class Dretva implements Runnable {
         kontrola = 0;
     }
     
+    /**
+     * glavna metoda za rad dretve
+     */
     @Override public void run() {
         try {
             zaPoslati = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -210,7 +216,8 @@ public class Dretva implements Runnable {
                     else if(simpleks.neogranicenaFunkcijaCilja) zaPoslati.println("neogranicena fja");
                     else {
                         String temp = "";
-                        for(var i : simpleks.tocka()) temp += i.toString() + " ";     
+                        DecimalFormat df = new DecimalFormat("#.####");
+                        for(var i : simpleks.tocka()) temp += df.format(i) + " ";     
                         zaPoslati.println(temp);
                         zaPoslati.println(simpleks.vrijednostFunkcijeCilja());
                     }

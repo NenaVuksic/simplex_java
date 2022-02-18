@@ -58,12 +58,8 @@ public class KlijentSwing extends javax.swing.JFrame {
         jTable3.setTableHeader(null);
         jScrollPane3.setColumnHeaderView(null);
         
-//        jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
-//        jScrollPane2.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
-//        jScrollPane3.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
-        
         try {
-            uticnica = new Socket("127.0.0.1", 7777);                           //ovdje treba staviti IP adresu i port računala s faksa!!
+            uticnica = new Socket("127.0.0.1", 7777);
         } catch (IOException ex) {
             Logger.getLogger(KlijentSwing.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -627,29 +623,29 @@ public class KlijentSwing extends javax.swing.JFrame {
                     jTextArea1.setText("Unesena zadaća je u kontradikciji.");
                 }
                 else if(line.equals("neogranicena fja")) {
-                    jTextArea1.setText("Funkcija cilja je neograničena na danom skupu.");
+                    jTextArea1.setText("Funkcija cilja je neograničena na\ndanom skupu.");
                 }
                 else {
                     String tocka[] = line.split(" ");
-                    String ispis = "Maksimum se postiže u točki (";
+                    String ispis = "Maksimum se postiže u točki\n(";
                     for(int i = 0; i < tocka.length - 1; i++) ispis += tocka[i] + ", ";
-                    ispis += tocka[tocka.length - 1] + "), a vrijednost funkcije cilja u toj točki je " + primljenoOdServera.readLine() + ".";
+                    ispis += tocka[tocka.length - 1] + "),\na vrijednost funkcije cilja u toj točki\nje " + primljenoOdServera.readLine() + ".";
                     jTextArea1.setText(ispis);
                 }
             }
             else if(izbor == 2) {
                 if(line.equals("lose dimenzije")) {
-                    jTextArea1.setText("Unesena matrica ima manje redaka nego stupaca, stoga se algoritam ne može provesti.");
+                    jTextArea1.setText("Unesena matrica ima manje\nredaka nego stupaca, stoga se\nalgoritam ne može provesti.");
                 }
                 else if(line.equals("lin zavisno")) {
-                    jTextArea1.setText("Retci matrice su međusobno linearno zavisni.");
+                    jTextArea1.setText("Retci matrice su međusobno\nlinearno zavisni.");
                 }
                 else if(line.equals("pripada konusu")) {
-                    jTextArea1.setText("Uneseni vektor pripada konusnoj ljusci; ne postoji razdvajajuća hiperravnina.");
+                    jTextArea1.setText("Uneseni vektor pripada\nkonusnoj ljusci;\nne postoji razdvajajuća hiperravnina.");
                 }
                 else {
                     String vektor[] = line.split(" ");
-                    String ispis = "Vektor normale razdvajajuće hiperravnine je [";
+                    String ispis = "Uneseni vektor ne pripada\nkonusnoj ljusci.\nVektor normale razdvajajuće\nhiperravnine je [";
                     for(int i = 0; i < vektor.length - 1; i++) ispis += vektor[i] + ", ";
                     ispis += vektor[vektor.length - 1] + "].";
                     jTextArea1.setText(ispis);
